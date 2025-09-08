@@ -1,0 +1,34 @@
+{
+    "roadmaps": [
+        {
+            "title": "Learn Python",
+            "steps": [
+                {
+                    "title": "Watch CS50 Lecture 1",
+                    "done": true
+                },
+                {
+                    "title": "Do practice problems",
+                    "done": false
+                }
+            ]
+        },
+        {
+            "title": "Learn Math",
+            "steps": [
+                {
+                    "title": "Study Algebra",
+                    "done": true
+                },
+                {
+                    "title": "Practice Calculus problems",
+                    "done": false
+                },
+                {
+                    "title": "learn calc 2",
+                    "done": false
+                }
+            ]
+        }
+    ]
+}
