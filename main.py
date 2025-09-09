@@ -11,9 +11,6 @@ from rich.align import Align
 from rich.columns import Columns
 # notes :
 # ill use rich
-# ill add things like “Are you sure you want to delete ‘Learn Python’?”
-# ill edit the indexing to all to be 1 based
-# ill edit minor issues
 def  load_data():
     try : 
         with open("data.json" ,"r") as f : 
