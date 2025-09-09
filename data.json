@@ -1,5 +1,18 @@
 {
+    "categories": [
+        "Programming",
+        "Math",
+        "Languages",
+        "Business",
+        "Other",
+        "school"
+    ],
     "roadmaps": [
+        {
+            "title": "learn c++",
+            "category": "Programming",
+            "steps": []
+        },
         {
             "title": "Learn Python",
             "steps": [
@@ -29,6 +42,11 @@
                     "done": false
                 }
             ]
+        },
+        {
+            "title": "arabic",
+            "category": "school",
+            "steps": []
         }
     ]
 }
