@@ -5,8 +5,10 @@ from rich.progress import Progress, BarColumn, TextColumn
 from rich.panel import Panel
 from rich.table import Table
 from rich import box
-import matplotlib.pyplot as plt
-import numpy as np
+import time
+from rich.text import Text
+from rich.align import Align
+from rich.columns import Columns
 # notes :
 # ill use rich
 # ill add things like “Are you sure you want to delete ‘Learn Python’?”
@@ -62,6 +64,9 @@ def create_roadmap(data):
     
     # Get roadmap title
     title = input("Enter title for the roadmap: ").strip()
+    if not title or title.isspace():
+        print("Title cannot be empty or just spaces.")
+        return
     if title:
         data["roadmaps"].append({
             "title": title, 
@@ -511,7 +516,7 @@ def import_export(data)  :
      choice = input("Select option: ").strip()
      if choice.isdigit():
             choice = int(choice)
-            if choice >= 1 or choice <= 2:
+            if 1 <= choice <= 2:
                  return
             print("number must be between 1 and 2")
      if choice == 1 :
@@ -661,79 +666,299 @@ def delete(data):
                            idxS = idxS - 1  # Convert to 0-based for internal use
                            break
                   print("Invalid input. Please enter a valid number.")
+             confirm = input(f"Are you sure you want to delete '{steps[idxS]['title']}'? (y/n): ").strip().lower()
+             if confirm != "y":
+                  print("Deletion canceled.")
+                  return
              deleted = steps.pop(idxS)
              save_data(data)
              print(f"Step '{deleted['title']}' deleted from roadmap '{roadmaps[roadmap_idx]['title']}'.")
-        else :    
-             print("Invalid choice. Please enter 1 or 2.")
-def main():
-    data = load_data()
-    while True:
-        print("""
-=============================
- Learning Roadmap Builder
-=============================
-[1] View Roadmaps
-[2] Create Roadmap
-[3] Add Step
-[4] Mark Step Complete
-[5] Delete Roadmap/Step
-[6] View Progress
-[7] Sort Roadmaps
-[8] Manage Categories
-[9] Category Overview
-[10] Progress Visualization
-[11] Edit Roadmap/Step
-[12] Import/Export Roadmaps
-[13] Exit
-""")
         
-        choice = input("Select an option: ").strip()
+
+
+def show_welcome_animation():
+    """Display an animated welcome screen"""
+    console = Console()
+    console.clear()
+    
+    # Animated title
+    title_frames = [
+        "🎯 Learning Roadmap Builder",
+        "🎯 Learning Roadmap Builder ✨",
+        "🎯 Learning Roadmap Builder ✨🚀",
+        "🎯 Learning Roadmap Builder ✨🚀💡"
+    ]
+    
+    for frame in title_frames:
+        console.clear()
+        console.print(Panel.fit(
+            f"[bold bright_blue]{frame}[/bold bright_blue]",
+            border_style="bright_blue",
+            box=box.DOUBLE
+        ), justify="center")
+        time.sleep(0.3)
+    
+    # Welcome message
+    welcome_text = Text()
+    welcome_text.append("Welcome to your personal learning companion! ", style="bright_cyan")
+    welcome_text.append("🌟", style="yellow")
+    
+    console.print()
+    console.print(Align.center(welcome_text))
+    console.print()
+    time.sleep(1)
+
+def create_menu_panel():
+    """Create a beautiful menu using Rich components"""
+    console = Console()
+    
+    # Create menu sections
+    view_section = Table(show_header=False, box=None, padding=(0, 1))
+    view_section.add_row("📋 [bold cyan]1[/bold cyan] View Roadmaps", "Browse your learning paths")
+    view_section.add_row("📊 [bold cyan]6[/bold cyan] View Progress", "Check completion status") 
+    view_section.add_row("🎨 [bold cyan]10[/bold cyan] Progress Visualization", "Beautiful progress display")
+    
+    manage_section = Table(show_header=False, box=None, padding=(0, 1))
+    manage_section.add_row("✨ [bold green]2[/bold green] Create Roadmap", "Start a new learning journey")
+    manage_section.add_row("➕ [bold green]3[/bold green] Add Step", "Add tasks to your roadmap")
+    manage_section.add_row("✅ [bold green]4[/bold green] Mark Step Complete", "Track your achievements")
+    manage_section.add_row("✏️  [bold green]11[/bold green] Edit Roadmap/Step", "Modify existing content")
+    
+    organize_section = Table(show_header=False, box=None, padding=(0, 1))
+    organize_section.add_row("🗂️  [bold yellow]8[/bold yellow] Manage Categories", "Organize your topics")
+    organize_section.add_row("📈 [bold yellow]9[/bold yellow] Category Overview", "View category stats")
+    organize_section.add_row("🔄 [bold yellow]7[/bold yellow] Sort Roadmaps", "Organize your roadmaps")
+    
+    tools_section = Table(show_header=False, box=None, padding=(0, 1))
+    tools_section.add_row("💾 [bold magenta]12[/bold magenta] Import/Export", "Backup & share roadmaps")
+    tools_section.add_row("🗑️  [bold red]5[/bold red] Delete Roadmap/Step", "Remove unwanted items")
+    tools_section.add_row("🚪 [bold white]13[/bold white] Exit", "Save and quit")
+    
+    # Create panels for each section
+    view_panel = Panel(view_section, title="[bold bright_blue]📊 View & Track[/bold bright_blue]", 
+                      border_style="bright_blue", box=box.ROUNDED)
+    manage_panel = Panel(manage_section, title="[bold bright_green]🛠️  Create & Manage[/bold bright_green]", 
+                        border_style="bright_green", box=box.ROUNDED)
+    organize_panel = Panel(organize_section, title="[bold bright_yellow]🗂️  Organize[/bold bright_yellow]", 
+                          border_style="bright_yellow", box=box.ROUNDED)
+    tools_panel = Panel(tools_section, title="[bold bright_magenta]🔧 Tools & Utilities[/bold bright_magenta]", 
+                       border_style="bright_magenta", box=box.ROUNDED)
+    
+    return [view_panel, manage_panel, organize_panel, tools_panel]
+
+def get_user_stats(data):
+    """Calculate and return user statistics"""
+    total_roadmaps = len(data["roadmaps"])
+    total_steps = sum(len(roadmap["steps"]) for roadmap in data["roadmaps"])
+    completed_steps = sum(sum(1 for step in roadmap["steps"] if step["done"]) 
+                         for roadmap in data["roadmaps"])
+    completion_rate = (completed_steps / total_steps * 100) if total_steps > 0 else 0
+    
+    return {
+        "roadmaps": total_roadmaps,
+        "steps": total_steps,
+        "completed": completed_steps,
+        "completion_rate": completion_rate
+    }
+
+def create_stats_display(data):
+    """Create a beautiful stats display"""
+    stats = get_user_stats(data)
+    
+    # Create stats table
+    stats_table = Table(show_header=False, box=None)
+    stats_table.add_column(justify="center", style="bold")
+    stats_table.add_column(justify="center")
+    
+    # Determine progress emoji and color
+    rate = stats["completion_rate"]
+    if rate == 0:
+        progress_emoji, progress_color = "💤", "red"
+        progress_msg = "Ready to start!"
+    elif rate < 25:
+        progress_emoji, progress_color = "🌱", "yellow" 
+        progress_msg = "Getting started"
+    elif rate < 50:
+        progress_emoji, progress_color = "🚶‍♂️", "blue"
+        progress_msg = "Making progress"
+    elif rate < 75:
+        progress_emoji, progress_color = "🚀", "green"
+        progress_msg = "Great momentum!"
+    elif rate < 100:
+        progress_emoji, progress_color = "🔥", "bright_green"
+        progress_msg = "Almost there!"
+    else:
+        progress_emoji, progress_color = "🎉", "bold green"
+        progress_msg = "All completed!"
+    
+    stats_table.add_row(f"{progress_emoji}", f"[{progress_color}]{rate:.1f}% Complete[/{progress_color}]")
+    stats_table.add_row("🗺️", f"[cyan]{stats['roadmaps']}[/cyan] Roadmaps")
+    stats_table.add_row("📝", f"[white]{stats['steps']}[/white] Total Steps")
+    stats_table.add_row("✅", f"[green]{stats['completed']}[/green] Completed")
+    
+    return Panel(
+        Align.center(stats_table),
+        title=f"[bold]{progress_emoji} Your Progress[/bold]",
+        subtitle=f"[dim]{progress_msg}[/dim]",
+        border_style=progress_color,
+        box=box.ROUNDED
+    )
+
+def show_motivational_tip():
+    """Display a random motivational tip"""
+    tips = [
+        "💡 Break large goals into smaller, manageable steps!",
+        "🎯 Consistency beats perfection every time!",
+        "🌟 Every expert was once a beginner!",
+        "🚀 Progress, not perfection, is the goal!",
+        "💪 Small daily improvements lead to stunning results!",
+        "⭐ Your only competition is who you were yesterday!",
+        "🎨 Learning is a journey, not a destination!",
+        "🔥 The best time to start was yesterday, the second best time is now!",
+    ]
+    
+    import random
+    tip = random.choice(tips)
+    
+    return Panel.fit(
+        f"[italic bright_yellow]{tip}[/italic bright_yellow]",
+        border_style="yellow",
+        box=box.ROUNDED
+    )
+
+def main():
+    console = Console()
+    data = load_data()
+    
+    # Show welcome animation on first run
+    show_welcome_animation()
+    
+    while True:
+        console.clear()
+        
+        # Create main header
+        header = Panel.fit(
+            "[bold bright_cyan]🎯 Learning Roadmap Builder 🎯[/bold bright_cyan]",
+            subtitle="[dim]Your Personal Learning Companion[/dim]",
+            border_style="bright_cyan",
+            box=box.DOUBLE
+        )
+        console.print(header, justify="center")
+        console.print()
+        
+        # Show user stats
+        if data["roadmaps"]:
+            stats_panel = create_stats_display(data)
+            console.print(stats_panel)
+            console.print()
+        
+        # Create and display menu
+        menu_panels = create_menu_panel()
+        columns = Columns(menu_panels, equal=True, expand=True)
+        console.print(columns)
+        console.print()
+        
+        # Show motivational tip
+        tip_panel = show_motivational_tip()
+        console.print(tip_panel)
+        console.print()
+        
+        # Get user input with style
+        choice_prompt = Text()
+        choice_prompt.append("🎮 Select your choice", style="bold bright_white")
+        choice_prompt.append(" (1-13): ", style="dim")
+        
+        console.print(choice_prompt, end="")
+        choice = input().strip()
+        
         if choice.isdigit():
             idx = int(choice)
+            
+            # Add loading animation for better UX
+            if idx in range(1, 14):
+                console.print(f"\n[dim]Loading option {idx}...[/dim]")
+                time.sleep(0.5)
+            
             match idx:
                 case 1:
+                    console.clear()
                     view_roadmaps(data)
-                    input("Press Enter to continue...")
+                    console.print(f"\n[dim]Press Enter to return to main menu...[/dim]", end="")
+                    input()
                 case 2:
+                    console.clear()
                     create_roadmap(data)
-                    input("Press Enter to continue...")
+                    console.print(f"\n[dim]Press Enter to return to main menu...[/dim]", end="")
+                    input()
                 case 3:
+                    console.clear()
                     add_step(data)
-                    input("Press Enter to continue...")
+                    console.print(f"\n[dim]Press Enter to return to main menu...[/dim]", end="")
+                    input()
                 case 4:
+                    console.clear()
                     mark_step_complete(data)
-                    input("Press Enter to continue...")
+                    console.print(f"\n[dim]Press Enter to return to main menu...[/dim]", end="")
+                    input()
                 case 5:
+                    console.clear()
                     delete(data)
-                    input("Press Enter to continue...")
+                    console.print(f"\n[dim]Press Enter to return to main menu...[/dim]", end="")
+                    input()
                 case 6:
+                    console.clear()
                     view_progress(data)
-                    input("Press Enter to continue...")
+                    console.print(f"\n[dim]Press Enter to return to main menu...[/dim]", end="")
+                    input()
                 case 7:
+                    console.clear()
                     Sort_Roadmaps(data)
-                    input("Press Enter to continue...")
+                    console.print(f"\n[dim]Press Enter to return to main menu...[/dim]", end="")
+                    input()
                 case 8:
+                    console.clear()
                     manage_categories(data)
                 case 9:
+                    console.clear()
                     Categories(data)
-                    input("Press Enter to continue...")
+                    console.print(f"\n[dim]Press Enter to return to main menu...[/dim]", end="")
+                    input()
                 case 10:
                     Progress_Visualization(data)
-                    input("Press Enter to continue...")
+                    console.print(f"\n[dim]Press Enter to return to main menu...[/dim]", end="")
+                    input()
                 case 11:
+                    console.clear()
                     edit(data)
-                    input("Press Enter to continue...")
+                    console.print(f"\n[dim]Press Enter to return to main menu...[/dim]", end="")
+                    input()
                 case 12:
+                    console.clear()
                     import_export(data)
-                    input("Press Enter to continue...")
+                    console.print(f"\n[dim]Press Enter to return to main menu...[/dim]", end="")
+                    input()
                 case 13:
-                    print("Exiting.......")
+                    # Stylish exit sequence
+                    console.clear()
+                    goodbye_panel = Panel.fit(
+                        "[bold bright_green]🎉 Thank you for using Learning Roadmap Builder! 🎉[/bold bright_green]\n"
+                        "[dim]Keep learning and growing! 🚀[/dim]",
+                        border_style="bright_green",
+                        box=box.DOUBLE
+                    )
+                    console.print(goodbye_panel, justify="center")
+                    console.print("\n[dim]Saving your progress...[/dim]")
+                    time.sleep(1)
+                    console.print("[green]✅ Progress saved successfully![/green]")
+                    time.sleep(0.5)
+                    console.print("[bright_blue]👋 See you next time![/bright_blue]")
                     break
                 case _: 
-                    print("Invalid choice. Please select a number between 1 and 13.")
+                    console.print(f"\n[bold red]❌ Invalid choice![/bold red] Please select a number between [bold]1[/bold] and [bold]13[/bold].")
+                    time.sleep(2)
         else:
-            print("Invalid input. Please enter a number.")
+            console.print(f"\n[bold red]❌ Invalid input![/bold red] Please enter a [bold]number[/bold].")
+            time.sleep(2)
 
 if __name__ == "__main__":
     main()
