@@ -1,40 +1,55 @@
 from data_manager import save_data
-
+from rich.console import Console
+from rich.panel import Panel
+from rich.prompt import Prompt, IntPrompt, Confirm
+from rich import box
+from rich.table import Table
+import time
 def create_roadmap(data):
-    print("[Create Roadmap]")
-    
+
+    console = Console()
+    console.clear()
+    console.print(Panel.fit("✨ [bold green]Create New Roadmap[/bold green]", subtitle = "[dim]Start your learning journey[/]" , border_style="green" , box=box.DOUBLE))
+    console.print()
+    categories_table  = Table(show_header=False , box=box.SIMPLE)
+    categories_table.add_column("#" , style="bold cyan" ,  width=4)
+    categories_table.add_column('Catgory' , style="white")
     # Show available categories
-    print("\nAvailable categories:")
+    console.print("[bold]Available categories:[/bold]")
     for i, category in enumerate(data["categories"], start=1):
-        print(f"{i}. {category}")
-    print(f"{len(data['categories']) + 1}. Add new category")
-    
+        categories_table.add_row(str(i) , f"📂 {category}")
+    console.print(categories_table)
+    console.print(f"[dim]{len(data['categories']) + 1}. Add new category[/dim]")
+    console.print()
     # Get category choice
-    while True:
-        cat_choice = input("\nSelect category number: ").strip()
-        if cat_choice.isdigit():
-            cat_choice = int(cat_choice)
-            if 1 <= cat_choice <= len(data["categories"]) + 1:
-                break
-        print("Invalid input. Please try again.")
+    try:
+        cat_choice = IntPrompt.ask(
+            "[yellow][bold]Select category number[/bold][/]",
+            choices=[str(i) for i in range(1, len(data["categories"]) + 2)],
+            show_choices=False
+        )
+    except PromptError:
+     console.print("[red]Invalid selection! Please choose a valid category number.[/red]")
+     return
     
     # Handle category selection
     if cat_choice == len(data["categories"]) + 1:
         # Add new category
-        new_category = input("Enter new category name: ").strip()
+        new_category =  Prompt.ask("[bold]Enter new category name[/bold]")
         if new_category:
             data["categories"].append(new_category)
             category = new_category
-            print(f"Category '{new_category}' added.")
+            console.print(f"[green]✅ Category '{new_category}' added.[/]")
         else:
             category = "Other"
+            console.print("[yellow]Using 'Other' category[/yellow]")
     else:
         category = data["categories"][cat_choice - 1]
-    
+        console.print(f"[cyan]Selected: 📂 {category}[/cyan]")
     # Get roadmap title
-    title = input("Enter title for the roadmap: ").strip()
+    title = Prompt.ask("[bold]Enter roadmap title[/bold]")
     if not title or title.isspace():
-        print("Title cannot be empty or just spaces.")
+        console.print("[red]❌ Title cannot be empty or just spaces.[/]")
         return
     if title:
         data["roadmaps"].append({
@@ -43,38 +58,48 @@ def create_roadmap(data):
             "steps": []
         })
         save_data(data)
-        print(f"Roadmap '{title}' created in category '{category}'.")
-
+    console.print(Panel.fit(
+        f"✅ [bold green]Roadmap '{title}' created![/bold green]",
+        subtitle=f"[dim]Category: {category}[/dim]",
+        border_style="bright_green",
+        box=box.ROUNDED
+    ))
 def add_step(data):
-    # select which task 
-    print("\n[3] add step")
-
+    console = Console()
+    console.print(Panel.fit("[bold green]➕ Add Step[/bold green]", border_style="green", box=box.DOUBLE))
     roadmaps = data["roadmaps"]
     if not roadmaps:
-        print("No roadmaps available.")
+        console.print("[yellow][bold]No roadmaps available.[/bold][/]")
+        console.print("[dim][yellow]Try option 2 to create a roadmap[/][/]")
         return
-    print("\nSelect a roadmap (or 'q' to quit):")
+    table = Table(title="🗺️ Select Roadmap", box=box.ROUNDED)
+    table.add_column("#", style="bold cyan", width=4, justify="center")
+    table.add_column("Title", style="bold orchid")
     for i, roadmap in enumerate(roadmaps, start=1):
-        print(f"{i}. {roadmap['title']}")
-    while True: 
-        task = input("Enter roadmap number: ").strip()
-        if task.lower() == "q":
-            return
-        if task.isdigit() and 1 <= int(task) <= len(roadmaps):
-            idx = int(task) - 1
-            break
-        print("Invalid input. Please try again.")
-    # add a step to this task 
-
-    step_title = input("Enter step title: ").strip()
-    if not step_title:
-        print("Step title cannot be empty.")
+        table.add_row(str(i), roadmap["title"])
+    console.print(table)
+    console.print()
+    try:
+        idx = IntPrompt.ask("[bold cyan]Enter roadmap number (or 'q' to quit)[/]", show_choices=False) - 1
+        if idx < 0 or idx >= len(roadmaps):
+            raise PromptError
+    except PromptError:
+        console.print("[red]Invalid selection or quit.[/red]")
         return
-    if step_title:
-        roadmaps[idx]["steps"].append({"title": step_title, "done": False})
+    console.print()
+    step_title = Prompt.ask("[bold]Enter step title[/bold]").strip()
+    if not step_title:
+        console.print("[red]❌ Step title cannot be empty.[/red]")
+        return
+    roadmaps[idx]["steps"].append({"title": step_title, "done": False})
+    with console.status("[bold green]Saving...[/]"):
         save_data(data)
-        print(f"Step '{step_title}' added to '{roadmaps[idx]['title']}'.")
-
+        time.sleep(0.5)
+    console.print(Panel.fit(
+        f"✅ [bold green]Step '{step_title}' added to '{roadmaps[idx]['title']}'.[/]",
+        border_style="bright_green",
+        box=box.ROUNDED
+    ))
 def mark_step_complete(data):
     print("\n[4] Mark Step Complete")
     # select which task 
@@ -192,62 +217,89 @@ def edit_roadmap(data):
             print("Step title cannot be empty.")
 
 def delete_roadmap_or_step(data):
-    print("\n[5] Delete Roadmap/Step")
-    while True:
-        oper = input("Enter 1 to delete a roadmap, 2 to delete a step: ").strip()
-        if oper.isdigit():
-            oper = int(oper)
-            if 1 <= oper <= 2:
-                break
-        print("Invalid input. Please enter a valid number.")
+    console= Console()
+    console.print(Panel.fit("[red]🗑️  Delete Roadmap/Step[/]" , border_style="red" , box=box.DOUBLE))
+    try:
+        oper = IntPrompt.ask(
+            "[yellow][bold]Enter 1 to delete a roadmap , 2 to delete a step[/][/]",
+            choices=[str(i) for i in range(1, 3)],
+            show_choices=False
+        )
+    except:
+        console.print("[red]Invalid selection![/red]")
+        return
          
     roadmaps = data["roadmaps"]
     if not roadmaps:
-        print("No roadmaps available.")
+        console.print("[yellow][bold]No roadmaps available.[/bold][/]")
+        console.print("[dim][yellow] press 3 to add a step [/][/] ")
         return
     
-    print("\n=== Select a roadmap by typing its number ===")
-
+    roadmap_table = Table(title="🗺️  Select roadmap" , box = box.ROUNDED)
+    roadmap_table.add_column("#" , style=" bold cyan" , width=4 , justify="center")
+    roadmap_table.add_column("Roadmap" , style="bold orchid", justify='center')
     for i, roadmap in enumerate(roadmaps, start=1):
-        print(f"{i}. {roadmap['title']}")
+        roadmap_table.add_row(str(i) , str(roadmap["title"]))
+    console.print(roadmap_table)
+    console.print()
 
-    while True:
-        roadmap_idx = input("Enter roadmap Number : ")
-        if roadmap_idx.isdigit():
-            roadmap_idx = int(roadmap_idx)
-            if 1 <= roadmap_idx <= len(roadmaps):
-                roadmap_idx = roadmap_idx - 1  # Convert to 0-based for internal use
-                break
-        print("Invalid input. Please enter a valid number.")
+    try:
+        roadmap_idx = IntPrompt.ask(
+            "[red][bold]Select Roadmap number[/bold][/]",
+            choices=[str(i) for i in range(1, len(data["roadmaps"]) + 1)],
+            show_choices=True
+        )
+        roadmap_idx = roadmap_idx - 1 
+    except:
+        console.print("[red]Invalid selection![/red]")
+        return
+    
+
     if oper == 1:  
-        confirm = input(f"Are you sure you want to delete '{roadmaps[roadmap_idx]['title']}'? (y/n): ").strip().lower()
+        try : 
+            confirm = Prompt.ask(f"[bold][yellow]⚠️   Are you sure you want to delete '{roadmaps[roadmap_idx]['title']}'? (y/n): [/][/]" , choices=["y" ,"N"] ,show_choices=False , case_sensitive=False)
+
+        except:
+            console.print("[red]Invalid selection![/red]")
+            return
         if confirm != "y":
-            print("Deletion canceled.")
+            console.print("[green]Deletion canceled. [green]")
             return
         deleted = roadmaps.pop(roadmap_idx)
         save_data(data)
-        print(f"Roadmap '{deleted['title']}' deleted.")
+        console.print(Panel.fit(f"✅ [bold green] Roadmap '{deleted['title']}' deleted.[/]" , border_style="bright_green" ,box=box.ROUNDED))
 
     elif oper == 2:
         steps = roadmaps[roadmap_idx]["steps"]
         if not steps:
-            print("This roadmap has no steps yet.")
+            console.print("[bold yellow]This roadmap has no steps yet. [/]" , justify='center')
             return
-        print("\n=== Select a step to delete by typing its number ===")
-        for i in range(len(steps)):
-            print(f"{i+1}. {steps[i]['title']}")
-        while True: 
-            step_num = input("Enter step num : ")
-            if step_num.isdigit(): 
-                idxS = int(step_num)
-                if 1 <= idxS <= len(steps):
-                    idxS = idxS - 1  # Convert to 0-based for internal use
-                    break
-            print("Invalid input. Please enter a valid number.")
-        confirm = input(f"Are you sure you want to delete '{steps[idxS]['title']}'? (y/n): ").strip().lower()
-        if confirm != "y":
-            print("Deletion canceled.")
+        # console.print("[bold white]Select a step [/]", justify='center')
+       
+        steps_table = Table(title="🗺️ Select a step" , box = box.ROUNDED )
+        steps_table.add_column("#" , style=" bold cyan" , width=4 , justify="center")  
+        steps_table.add_column("Title" , style="bold violet")
+        console.print()
+        for i,step in enumerate(steps, start=1) : 
+            steps_table.add_row(str(i) , step["title"])
+        console.print(steps_table)
+        step_num= 0
+        try :
+            step_num = IntPrompt.ask(f"[bold cyan]Enter a step[/]" ,choices=[str(i) for i in range(1,len(steps)+1)] , show_choices= False)
+            console.print()
+        except:
+            console.print("[red]❌ Invalid input. Please enter a valid number.[/]")
             return
-        deleted = steps.pop(idxS)
-        save_data(data)
-        print(f"Step '{deleted['title']}' deleted from roadmap '{roadmaps[roadmap_idx]['title']}'.")
+        idxS= int(step_num) 
+        idxS -=1
+        confirm = Confirm.ask(f"Are you sure you want to delete '{steps[idxS]['title']}'? " , console=console)
+        if confirm :
+            deleted = steps.pop(idxS)
+            with console.status("[bold green]Saving...[/]"):
+             
+             save_data(data)
+             time.sleep(0.5)  
+            console.print(f"[bold green]Step '{deleted['title']}' deleted from roadmap '{roadmaps[roadmap_idx]['title']}'.[/]")
+        else : 
+            console.print(f"[bold red]Deletion canceled.[/]")
+            return

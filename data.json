@@ -5,13 +5,32 @@
         "Languages",
         "Business",
         "Other",
-        "school"
+        "school",
+        "ytyt"
     ],
     "roadmaps": [
+        {
+            "title": "arabic",
+            "category": "school",
+            "steps": []
+        },
         {
             "title": "learn c++",
             "category": "Programming",
             "steps": []
+        },
+        {
+            "title": "Learn Math",
+            "steps": [
+                {
+                    "title": "Study Algebra",
+                    "done": true
+                },
+                {
+                    "title": "Practice Calculus problems",
+                    "done": false
+                }
+            ]
         },
         {
             "title": "Learn Python",
@@ -27,31 +46,18 @@
             ]
         },
         {
-            "title": "Learn Math",
+            "title": "this just a big piece of shit",
+            "category": "ytyt",
             "steps": [
                 {
-                    "title": "Study Algebra",
-                    "done": true
-                },
-                {
-                    "title": "Practice Calculus problems",
+                    "title": "3",
                     "done": false
                 },
                 {
-                    "title": "learn calc 2",
+                    "title": "3",
                     "done": false
                 }
             ]
-        },
-        {
-            "title": "arabic",
-            "category": "school",
-            "steps": []
-        },
-        {
-            "title": "1",
-            "category": "Programming",
-            "steps": []
         }
     ]
 }
