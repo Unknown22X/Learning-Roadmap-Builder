@@ -4,16 +4,10 @@
         "Math",
         "Languages",
         "Business",
-        "Other",
         "school",
-        "ytyt"
+        "test"
     ],
     "roadmaps": [
-        {
-            "title": "arabic",
-            "category": "school",
-            "steps": []
-        },
         {
             "title": "learn c++",
             "category": "Programming",
@@ -41,20 +35,6 @@
                 },
                 {
                     "title": "Do practice problems",
-                    "done": false
-                }
-            ]
-        },
-        {
-            "title": "this just a big piece of shit",
-            "category": "ytyt",
-            "steps": [
-                {
-                    "title": "3",
-                    "done": false
-                },
-                {
-                    "title": "3",
                     "done": false
                 }
             ]

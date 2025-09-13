@@ -10,7 +10,7 @@ def view_roadmaps(data):
     console = Console()
     console.clear()
     
-    # Create beautiful header
+    # beautiful header
     console.print(Panel.fit(
         "📋 [bold bright_cyan]View All Roadmaps[/bold bright_cyan]", 
         subtitle="[dim]Your Learning Journeys[/dim]",
@@ -213,18 +213,23 @@ def view_roadmaps_by_category(data):
         console.print()
 
 def view_progress(data):
-    print("\n[View Progress]")
-    percent = 0
+    console =Console()
+    console.print(Panel.fit("[bold light_steel_blue3]View progress[/]" , box= box.ROUNDED))
     if not data["roadmaps"]:
-        print("No roadmaps found.")
+        console.print("[bold red]No roadmaps found.[/]")
         return
+    roadmaps_table = Table(title="[bold blue]Progress Summary[/bold blue]", show_header=True, header_style="bold magenta")
+    roadmaps_table.add_column("Roadmap" , style="cyan")
+    roadmaps_table.add_column("progress", justify="center" , style="light_sky_blue1")
+    roadmaps_table.add_column("steps", justify="center" , style="deep_pink4")
+
     for roadmap in data["roadmaps"]:
         steps = roadmap["steps"]
         total = len(steps)
         completed = sum(1 for step in steps if step["done"])
         percent = (completed / total * 100) if total > 0 else 0
-        print(f"\nRoadmap: {roadmap['title']} {percent:.1f}%")
-        print(f"Progress: {completed}/{total} steps completed {percent:.1f}%")
+        roadmaps_table.add_row(roadmap["title"] , f"{percent:.1f}%" , f"{completed}/{total}" )
+    console.print(roadmaps_table)
 
 def Categories(data):
     console = Console()

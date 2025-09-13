@@ -966,7 +966,6 @@
 # if __name__ == "__main__":
 #     main()
 #!/usr/bin/env python3
-
 import time
 from rich.console import Console
 from rich.panel import Panel
@@ -1049,6 +1048,7 @@ def main():
             
             # Add loading animation for better UX
             if idx in range(1, 14):
+                
                 console.print(f"\n[dim]Loading option {idx}...[/dim]")
                 time.sleep(0.5)
             
