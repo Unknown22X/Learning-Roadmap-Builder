@@ -42,7 +42,6 @@ def show_welcome_animation():
     console.print(Align.center(welcome_text))
     console.print()
     time.sleep(1)
-
 def create_menu_panel():
     """Create a beautiful 4-column menu with proper spacing"""
     # Create menu sections with optimized widths

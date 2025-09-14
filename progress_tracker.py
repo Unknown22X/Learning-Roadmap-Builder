@@ -5,6 +5,7 @@ from rich import box
 from rich.text import Text
 from rich.columns import Columns
 from ui_components import get_motivational_message
+from config import PRIORITY_EMOJIS , PRIORITY_COLORS
 
 def view_roadmaps(data):
     console = Console()
@@ -85,17 +86,24 @@ def view_all_roadmaps(data):
             # Create steps table
             steps_table = Table(show_header=True, box=box.SIMPLE, show_lines=True)
             steps_table.add_column("#", style="bold", width=4, justify="center")
+            steps_table.add_column("Priority", style="bold", width=8, justify="center")            
             steps_table.add_column("Step", style="bold white")
             steps_table.add_column("Status", style="bold", width=12, justify="center")
-            
+
             for i, step in enumerate(steps, start=1):
+
+                priority = step.get("priority", "none")
+                priority_emoji = PRIORITY_EMOJIS.get(priority, "📝")
+                priority_color = PRIORITY_COLORS.get(priority, "dim")
+                
                 if step.get("done", False):
                     status = "[green]✅ Done[/green]"
                 else:
                     status = "[yellow]⏳ Pending[/yellow]"
-                steps_table.add_row(str(i), step['title'], status)
+                steps_table.add_row(str(i), f"[{priority_color}]{priority_emoji}[/{priority_color}]", step['title'], status)
             
             console.print(steps_table)
+
         else:
             console.print(Panel.fit(
                 "[italic dim]No steps added yet. Use option 3 to add steps.[/italic dim]",
@@ -211,7 +219,10 @@ def view_roadmaps_by_category(data):
             border_style=status_color
         ))
         console.print()
-
+def get_priority_display(step):
+    """Get formatted priority display for a step"""
+    priority = step.get("priority", "none")
+    return f"[{PRIORITY_COLORS[priority]}]{PRIORITY_EMOJIS[priority]}[/{PRIORITY_COLORS[priority]}]"
 def view_progress(data):
     console =Console()
     console.print(Panel.fit("[bold light_steel_blue3]View progress[/]" , box= box.ROUNDED))
@@ -219,16 +230,18 @@ def view_progress(data):
         console.print("[bold red]No roadmaps found.[/]")
         return
     roadmaps_table = Table(title="[bold blue]Progress Summary[/bold blue]", show_header=True, header_style="bold magenta")
-    roadmaps_table.add_column("Roadmap" , style="cyan")
-    roadmaps_table.add_column("progress", justify="center" , style="light_sky_blue1")
-    roadmaps_table.add_column("steps", justify="center" , style="deep_pink4")
+    roadmaps_table.add_column("Roadmap", style="cyan")
+    roadmaps_table.add_column("Progress", justify="center", style="light_sky_blue1") 
+    roadmaps_table.add_column("Steps", justify="center", style="deep_pink4")
+    roadmaps_table.add_column("Priority", justify="center", style="yellow")  # New column
 
     for roadmap in data["roadmaps"]:
         steps = roadmap["steps"]
         total = len(steps)
         completed = sum(1 for step in steps if step["done"])
         percent = (completed / total * 100) if total > 0 else 0
-        roadmaps_table.add_row(roadmap["title"] , f"{percent:.1f}%" , f"{completed}/{total}" )
+        high_priority_steps = sum(1 for step in steps if step.get("priority") == "high")
+        roadmaps_table.add_row(roadmap["title"], f"{percent:.1f}%", f"{completed}/{total}", f"🚨{high_priority_steps}")
     console.print(roadmaps_table)
 
 def Categories(data):
@@ -346,7 +359,10 @@ def Progress_Visualization(data):
             completed_steps_list.add_row("[green]✅ Completed:[/green]")
             for step in steps:
                 if step["done"]:
-                    completed_steps_list.add_row(f"   🟢 {step['title']}")
+                    priority = step.get("priority", "none")
+                    emoji = PRIORITY_EMOJIS.get(priority, "📝")
+                    color = PRIORITY_COLORS.get(priority, "dim")
+                    completed_steps_list.add_row(f"   🟢 [{color}]{emoji}[/{color}] {step['title']}")
         
         # Pending steps list (if any)
         if completed < total:
@@ -354,7 +370,10 @@ def Progress_Visualization(data):
             pending_steps_list.add_row("[yellow]⏳ Pending:[/yellow]")
             for step in steps:
                 if not step["done"]:
-                    pending_steps_list.add_row(f"   🔴 {step['title']}")
+                    priority = step.get("priority", "none") 
+                    emoji = PRIORITY_EMOJIS.get(priority, "📝")
+                    color = PRIORITY_COLORS.get(priority, "dim")
+                pending_steps_list.add_row(f"   🔴 [{color}]{emoji}[/{color}] {step['title']}")
         
         # Combine everything
         content_table.add_row(progress_section)

@@ -4,6 +4,7 @@ from rich.panel import Panel
 from rich.prompt import Prompt, IntPrompt, Confirm
 from rich import box
 from rich.table import Table
+from config import MOTIVATIONAL_TIPS, ANIMATION_DELAY , PRIORITY_ORDER
 import time
 
 def create_roadmap(data):
@@ -99,7 +100,14 @@ def add_step(data):
     if not step_title:
         console.print("[red]❌ Step title cannot be empty.[/red]")
         return
-    roadmaps[idx]["steps"].append({"title": step_title, "done": False})
+    
+    try:
+        priority_choice = IntPrompt.ask("[bold]Priority : 1 ~ high , 2 ~ medium , 3 ~ low, 4 ~ none[/bold]", choices=["1", "2", "3", "4"])
+        priority_map = {1: "high", 2: "medium", 3: "low", 4: "none"}
+        priority = priority_map[priority_choice]
+    except:
+        priority = "none"
+    roadmaps[idx]["steps"].append({"title": step_title, "done": False , "priority" : priority })
     with console.status("[bold green]Saving...[/]"):
         save_data(data)
         time.sleep(0.5)
@@ -179,30 +187,53 @@ def mark_step_complete(data):
     ))
     
 
-
+def get_highest_priority_score(roadmap):
+    """Get numerical score for roadmap's highest priority step"""
+    if not roadmap.get("steps"):
+        return 3 
+    
+    return min(
+        PRIORITY_ORDER.get(step.get("priority", "none"), 3)
+        for step in roadmap["steps"]
+    )
+def sort_by_priority(items, is_roadmap=False):
+    """
+    Sort by priority - works for both steps and roadmaps
+    items: either list of steps or list of roadmaps
+    is_roadmap: True if sorting roadmaps, False if sorting steps
+    """
+    if is_roadmap:
+        # Sort roadmaps by their highest priority step
+        return sorted(items, key=lambda roadmap: get_highest_priority_score(roadmap))
+    else:
+        # Sort steps within a roadmap
+        return sorted(items, key=lambda step: PRIORITY_ORDER.get(step.get("priority", "none"), 3))
 
 def sort_roadmaps(data):
-    console= Console()
-    console.print(Panel.fit("[red]🗃️  Sort Roadmaps[/]" , border_style="red" , box=box.DOUBLE))
+    console = Console()
+    console.print(Panel.fit("[red]🗃️  Sort Roadmaps[/]", border_style="red", box=box.DOUBLE))
+    
     if not data["roadmaps"]:
         console.print("[red]No roadmaps to sort.[/]")
         return
  
-    table = Table( )
+    table = Table()
     table.add_column("#")
     table.add_column("Option")
-    table.add_row("1" ,"Sort by title" )
-    table.add_row("2" ,"Sort by progress" )
-    table.add_row("3" ,"Sort by category" )
+    table.add_row("1", "Sort by title")
+    table.add_row("2", "Sort by progress") 
+    table.add_row("3", "Sort by category")
+    table.add_row("4", "Sort by priority")
     console.print(table)
+    
     try:
         choice = IntPrompt.ask(
-            "[yellow][bold]Select option",
-            choices=[str(i) for i in range(1, 4)],
-            show_choices=True
+            "[yellow][bold]Select option[/bold][/yellow]",
+            choices=["1", "2", "3", "4"],
+            show_choices=False
         )
     except:
-        console.print("[red]❌  Invalid selection![/red]")
+        console.print("[red]❌ Invalid selection![/red]")
         return
 
     if choice == "1":
@@ -211,15 +242,24 @@ def sort_roadmaps(data):
         data["roadmaps"].sort(key=lambda x: sum(1 for s in x["steps"] if s["done"]) / len(x["steps"]) if x["steps"] else 0, reverse=True)
     elif choice == "3":
         data["roadmaps"].sort(key=lambda x: x.get("category", "Uncategorized"))
-    with console.status("[bold green]Saving...[/]") :
+    elif choice == "4": 
+        # Sort roadmaps by priority
+        data["roadmaps"] = sort_by_priority(data["roadmaps"], is_roadmap=True)
+        
+        # Sort steps within each roadmap by priority
+        for roadmap in data["roadmaps"]:
+            if roadmap["steps"]:
+                roadmap["steps"] = sort_by_priority(roadmap["steps"], is_roadmap=False)
+    
+    with console.status("[bold green]Saving...[/]"):
         save_data(data)
         time.sleep(0.5)
+    
     console.print(Panel.fit(
         f"✅ [bold green]Roadmaps have been sorted.[/]",
-        border_style="bright_green",
+        border_style="bright_green", 
         box=box.ROUNDED
     ))
-
 def edit_roadmap(data):
     console = Console()
     console.clear()
@@ -461,3 +501,30 @@ def delete_roadmap_or_step(data):
         else : 
             console.print(f"[bold red]Deletion canceled.[/]")
             return
+def show_help():
+    console = Console()
+    console.clear()
+    
+    console.print(Panel.fit(
+        "❓ [bold yellow]Help & Support[/bold yellow]",
+        border_style="yellow",
+        box=box.ROUNDED
+    ))
+    console.print()
+    
+    help_table = Table(show_header=False, box=None)
+    help_table.add_row("💡 [bold]Need help?[/bold]", "Check the documentation")
+    help_table.add_row("🐛 [bold]Found a bug?[/bold]", "Report it on GitHub")
+    help_table.add_row("💡 [bold]Have ideas?[/bold]", "Suggest new features!")
+    console.print(help_table)
+    
+    console.print()
+    console.print(Panel.fit(
+        "👨‍💻 [bold]Contact the Developer:[/bold]\n"
+        "• [blue]GitHub: https://github.com/Unknown22X[/blue]\n"
+        "• [green]Telegram: WE_CX [/green]\n"
+        # "• [cyan]Portfolio: myportfolio.com[/cyan]"
+        ,
+        border_style="bright_blue",
+        box=box.ROUNDED
+    ))

@@ -17,3 +17,25 @@ MOTIVATIONAL_TIPS = [
     "🎨 Learning is a journey, not a destination!",
     "🔥 The best time to start was yesterday, the second best time is now!",
 ]
+
+# Add these constants
+PRIORITY_COLORS = {
+    "high": "red",
+    "medium": "yellow", 
+    "low": "green",
+    "none": "dim"
+}
+
+PRIORITY_EMOJIS = {
+    "high": "🚨",
+    "medium": "⚠️",
+    "low": "💚", 
+    "none": "📝"
+}
+
+PRIORITY_ORDER = {
+    "high": 0,    # Highest priority (comes first)
+    "medium": 1,
+    "low": 2, 
+    "none": 3     # Lowest priority (comes last)
+}

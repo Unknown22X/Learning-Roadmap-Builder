@@ -3,8 +3,8 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 from rich.columns import Columns
-from rich import box
-
+from rich import box 
+from rich.table import Table
 # Import all modules
 from data_manager import load_data
 from ui_components import (
@@ -14,11 +14,12 @@ from ui_components import (
 
 from roadmap_operations import (
     create_roadmap, add_step, mark_step_complete, edit_roadmap, 
-    delete_roadmap_or_step, sort_roadmaps
+    delete_roadmap_or_step, sort_roadmaps , show_help
 )
 from category_manager import manage_categories
 from progress_tracker import view_roadmaps, view_progress, Categories, Progress_Visualization
 from import_export import import_export_roadmaps
+
 
 def main():
     console = Console()
@@ -46,7 +47,6 @@ def main():
             console.print(stats_panel)
             console.print()
         
-        # Create and display menu
         menu_panels = create_menu_panel()
         if len(menu_panels) == 1:
            # Single column layout
@@ -61,13 +61,16 @@ def main():
             for panel in menu_panels:
               console.print(panel)
             console.print()
-        
-        # Show motivational tip
+    
         tip_panel = show_motivational_tip()
         console.print(tip_panel)
-        console.print()
-        
-        # Get user input with style
+    
+        console.print(Panel.fit(
+            "[dim]✨ Created by [/dim][bold blink bold grey11]joy[/] [dim]• [/dim]"
+            "[blue]GitHub: @Unknown22X[/blue]",
+            border_style="dim",
+            box=box.SIMPLE
+        ))    
         choice_prompt = Text()
         choice_prompt.append("🎮 Select your choice", style="bold bright_white")
         choice_prompt.append(" (1-13): ", style="dim")
@@ -156,6 +159,8 @@ def main():
                     time.sleep(1)
                     console.print("[green]✅ Progress saved successfully![/green]")
                     time.sleep(0.5)
+                    show_help()
+                    time.sleep(5.0)
                     console.print("[bright_blue]👋 See you next time![/bright_blue]")
                     break
                 case _: 

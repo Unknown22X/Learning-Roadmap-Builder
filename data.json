@@ -5,7 +5,8 @@
         "Languages",
         "Business",
         "school",
-        "test"
+        "test",
+        "SAT"
     ],
     "roadmaps": [
         {
@@ -18,11 +19,27 @@
             "steps": [
                 {
                     "title": "Study Algebra",
-                    "done": true
+                    "done": true,
+                    "priority": "high"
                 },
                 {
                     "title": "Practice Calculus problems",
                     "done": false
+                },
+                {
+                    "title": "learn calc 2",
+                    "done": false,
+                    "priority": "high"
+                },
+                {
+                    "title": "g",
+                    "done": false,
+                    "priority": "high"
+                },
+                {
+                    "title": "dd",
+                    "done": false,
+                    "priority": "low"
                 }
             ]
         },

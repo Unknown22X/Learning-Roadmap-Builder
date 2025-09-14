@@ -1,5 +1,5 @@
 import json
-from config import DATA_FILE, DEFAULT_CATEGORIES
+from config import DATA_FILE, DEFAULT_CATEGORIES 
 
 def load_data():
     try: 
