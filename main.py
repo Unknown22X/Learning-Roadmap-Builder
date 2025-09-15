@@ -14,7 +14,7 @@ from ui_components import (
 
 from roadmap_operations import (
     create_roadmap, add_step, mark_step_complete, edit_roadmap, 
-    delete_roadmap_or_step, sort_roadmaps , show_help
+    delete_roadmap_or_step, sort_roadmaps , show_help ,search
 )
 from category_manager import manage_categories
 from progress_tracker import view_roadmaps, view_progress, Categories, Progress_Visualization
@@ -73,7 +73,7 @@ def main():
         ))    
         choice_prompt = Text()
         choice_prompt.append("🎮 Select your choice", style="bold bright_white")
-        choice_prompt.append(" (1-13): ", style="dim")
+        choice_prompt.append(" (1-14): ", style="dim")
         
         console.print(choice_prompt, end="")
         choice = input().strip()
@@ -82,7 +82,7 @@ def main():
             idx = int(choice)
             
             # Add loading animation for better UX
-            if idx in range(1, 14):
+            if idx in range(1, 15):
 
                 console.print(f"\n[dim]Loading option {idx}...[/dim]")
                 time.sleep(0.5)
@@ -145,7 +145,13 @@ def main():
                     import_export_roadmaps(data)
                     console.print(f"\n[dim]Press Enter to return to main menu...[/dim]", end="")
                     input()
-                case 13:
+                case 13 : 
+
+                    console.clear()
+                    search(data)
+                    console.print(f"\n[dim]Press Enter to return to main menu...[/dim]", end="")
+                    input()
+                case 14:
                     # Stylish exit sequence
                     console.clear()
                     goodbye_panel = Panel.fit(

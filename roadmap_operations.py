@@ -1,7 +1,7 @@
 from data_manager import save_data
 from rich.console import Console
 from rich.panel import Panel
-from rich.prompt import Prompt, IntPrompt, Confirm
+from rich.prompt import Prompt, IntPrompt, Confirm ,PromptError
 from rich import box
 from rich.table import Table
 from config import MOTIVATIONAL_TIPS, ANIMATION_DELAY , PRIORITY_ORDER
@@ -501,6 +501,77 @@ def delete_roadmap_or_step(data):
         else : 
             console.print(f"[bold red]Deletion canceled.[/]")
             return
+def search (data) :
+    """Search Roadmaps by title , catgoary or step content"""
+    console = Console()
+    console.clear()
+    console.print(Panel.fit(
+        "[bold cyan] Search Roadmpas & Steps [/]" ,
+        subtitle="Find your learning content" , 
+        border_style= "cyan", 
+        box=box.DOUBLE
+                            ))
+    console.print()
+    if not data["roadmaps"] :
+        console.print("[bold red] No roadmaps available.[/]")
+        console.print("[dim][yellow]Try option 2 to create a roadmap[/][/]")
+        return
+    try :
+        keyword = Prompt.ask("🔍 Enter search keyword ").strip().lower()
+        if not keyword :
+            console.print("[red] Search keyword cannot be empty[/]")
+            return
+    except PromptError: 
+        console.print("[red]Invalid input! Please enter a valid keyword.[/red]")
+        return
+    
+    # Collect matches
+
+    roadmaps_results= []
+    steps_results = []
+    for roadmap in data["roadmaps"] :
+        match_reasons= []
+        # if it a roadmap
+        if keyword in roadmap["title"].lower() :
+            match_reasons.append("Title")
+        if keyword in roadmap.get("category" ,"").lower() :
+            match_reasons.append("Category")
+        # serarch in steps : 
+        match_steps=[step for step in roadmap["steps"] if keyword in step["title"].lower()]
+        if match_steps : 
+            match_reasons.append("step")
+            steps_results.extend([(roadmap,step) for step in match_steps])
+        if match_reasons:
+            roadmaps_results.append((roadmap, ", ".join(match_reasons)))
+     # display results 
+    if not roadmaps_results and not steps_results :
+          console.print(f"[red]No matches found for '{keyword}'.[/red]")
+          return        
+    if roadmaps_results: 
+            console.print(f"\n [cyan bold]Found {len(roadmaps_results)} roadmap(s) matching '{keyword}'[/]")
+            table = Table(title="🗺️   Roadmap Search Results" , box =box.ROUNDED , style = "red")  
+            table.add_column("#", style="bold cyan", width=4, justify="center") 
+            table.add_column("Title", style="bold orchid")
+            table.add_column("Category", style="white")
+            table.add_column("Progress", style="green", justify="center")
+            table.add_column("Matched On", style="yellow")
+            for i, (roadmap,reasons)in enumerate(roadmaps_results, start = 1) :
+
+                completed = sum(1 for step in roadmap.get("steps" , []) if step.get("done" , False) )
+                percent  = (completed / len(roadmap["steps"])) * 100 if len(roadmap["steps"]) > 0 else 0
+                table.add_row(str(i),roadmap["title"] , roadmap.get("category" ,"other") ,f"{percent:.1f}%" , reasons)
+            console.print(table)
+    if steps_results : 
+                console.print(f"\n[bold cyan]Found {len(steps_results)} step(s) matching '{keyword}'[/bold cyan]")
+                table = Table(title="📝 Step Search Results", box=box.ROUNDED)
+                table.add_column("#",style="bold cyan", width=4, justify="center")
+                table.add_column("Step Title", style="bold violet")
+                table.add_column("Roadmap", style="white")
+                table.add_column("Status", style="green")
+                for i , (roadmap,step) in enumerate (steps_results, start = 1) :
+                    status = "✅ Done" if step.get("done", False) else "❌ Not Done"
+                    table.add_row(str(i),step["title"],roadmap["title"] , status)
+                console.print(table)
 def show_help():
     console = Console()
     console.clear()

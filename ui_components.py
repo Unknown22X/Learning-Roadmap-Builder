@@ -62,9 +62,10 @@ def create_menu_panel():
     organize_section.add_row("🔄 [bold yellow]7[/bold yellow] Sort", "Organize roadmaps")
     
     tools_section = Table(show_header=False, box=None, padding=(0, 1), width=32)
+    tools_section.add_row("🔍 [bold magenta]13[/bold magenta] Search Roadmaps/Steps", "Find specific content")
     tools_section.add_row("💾 [bold magenta]12[/bold magenta] Import/Export", "Backup & share")
     tools_section.add_row("🗑️  [bold red]5[/bold red] Delete", "Remove items")
-    tools_section.add_row("🚪 [bold white]13[/bold white] Exit", "Save and quit")
+    tools_section.add_row("🚪 [bold white]14[/bold white] Exit", "Save and quit")
     
     # Create panels for each section
     view_panel = Panel(
