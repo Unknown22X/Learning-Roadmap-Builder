@@ -8,8 +8,14 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.prompt import Prompt, IntPrompt
 from rich.table import Table
+from config import ROADMAP_SCHEMA
+from jsonschema import validate
+from jsonschema.exceptions import ValidationError
+
 
 console = Console()
+
+
 
 def print_panel(message, subtitle="", success=True):
     border_color = "bright_green" if success else "red"
@@ -21,6 +27,20 @@ def print_panel(message, subtitle="", success=True):
         border_style=border_color,
         box=box.ROUNDED
     ))
+def sanitize(text):
+    return (
+        text.replace("✓", "v")   
+            .replace("✗", "x")   
+            .encode('latin-1', 'replace')
+            .decode('latin-1')
+    )
+def validate_imported_roadmap(roadmap):
+    try:
+        validate(instance=roadmap, schema=ROADMAP_SCHEMA)
+        return True
+    except ValidationError as e:
+        console.print(f"[red]Invalid roadmap JSON: {e.message}[/red]")
+        return False
 
 def to_json(data, filename, idx):
     if not filename.endswith('.json'):
@@ -44,8 +64,6 @@ def to_pdf(data, filename, idx):
 
     pdf = FPDF()
     pdf.add_page()
-
-    # Use built-in Courier font (monospace) for better alignment, no font file needed
     pdf.set_font("Courier", size=12)
     line_height = 10
     indent = 5
@@ -53,7 +71,6 @@ def to_pdf(data, filename, idx):
     try:
         roadmap = data["roadmaps"][idx]
 
-        # Title in bold using Helvetica built-in font
         pdf.set_font("Helvetica", "B", 16)
         pdf.cell(0, 10, roadmap.get('title', 'No title'), ln=True)
 
@@ -69,7 +86,8 @@ def to_pdf(data, filename, idx):
         pdf.ln(3)
         for step in roadmap.get("steps", []):
             done = "✓" if step.get("done") else "✗"
-            title = step.get("title", "")
+            done = sanitize(done)
+            title = sanitize(step.get("title", ""))
             priority = step.get("priority", "")
 
             line = f"[{done}] {title}"
@@ -107,11 +125,12 @@ def to_csv(data, filename, idx):
     roadmap = data["roadmaps"][idx]
     try:
         df = pd.json_normalize(
-            roadmap,
-            record_path='steps',
-            meta=['title', 'category'],
-            errors='ignore'
-        )
+          roadmap,
+          record_path='steps',
+          meta=['title', 'category'],
+          meta_prefix='roadmap_' ,
+          errors='ignore'
+            )
         df = df.rename(columns={"title": "step_title"})
         df.to_csv(filename, index=False)
         print_panel("Successfully exported!", f"File: {filename}", True)
@@ -137,7 +156,7 @@ def to_markdown(data, filename, idx):
             md += f" _(priority: {priority})_"
         md += "\n"
     try:
-        with open(filename, 'w') as f:
+        with open(filename, 'w' , encoding='utf-8') as f:
             f.write(md)
         print_panel("Successfully exported!", f"File: {filename}", True)
         return True
@@ -266,8 +285,11 @@ def import_export_roadmaps(data):
                     roadmap = json.load(f)
                 time.sleep(0.5)
 
-            data["roadmaps"].append(roadmap)
-            save_data(data)
+            if validate_imported_roadmap(roadmap):
+              data["roadmaps"].append(roadmap)
+              save_data(data)
+            else:
+              console.print("[red]Import failed due to invalid JSON structure.[/red]")
 
             print_panel("Successfully imported!", f"Roadmap: {roadmap['title']}", True)
 

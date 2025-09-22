@@ -19,8 +19,8 @@ def save_data(data):
 def get_user_stats(data):
     """Calculate and return user statistics"""
     total_roadmaps = len(data["roadmaps"])
-    total_steps = sum(len(roadmap["steps"]) for roadmap in data["roadmaps"])
-    completed_steps = sum(sum(1 for step in roadmap["steps"] if step["done"]) 
+    total_steps = sum(len(roadmap.get("steps",[])) for roadmap in data["roadmaps"])
+    completed_steps = sum(sum(1 for step in roadmap.get("steps",[]) if step["done"]) 
                          for roadmap in data["roadmaps"])
     completion_rate = (completed_steps / total_steps * 100) if total_steps > 0 else 0
     

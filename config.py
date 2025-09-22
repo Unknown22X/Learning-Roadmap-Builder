@@ -1,3 +1,5 @@
+
+
 # Configuration settings for the application
 DEFAULT_CATEGORIES = ["Programming", "Design", "Languages", "Business", "Other"]
 DATA_FILE = "data.json"
@@ -38,4 +40,25 @@ PRIORITY_ORDER = {
     "medium": 1,
     "low": 2, 
     "none": 3     # Lowest priority (comes last)
+}
+
+ROADMAP_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "title": {"type": "string"},
+        "category": {"type": "string"},
+        "steps": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "title": {"type": "string"},
+                    "done": {"type": "boolean"},
+                    "priority": {"type": "string"}
+                },
+                "required": ["title", "done"]
+            }
+        }
+    },
+    "required": ["title", "steps"]
 }

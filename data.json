@@ -5,7 +5,7 @@
         "Languages",
         "Business",
         "school",
-        "test",
+        "tests",
         "SAT"
     ],
     "roadmaps": [
@@ -19,12 +19,12 @@
             "steps": [
                 {
                     "title": "Study Algebra",
-                    "done": true,
+                    "done": false,
                     "priority": "high"
                 },
                 {
                     "title": "Practice Calculus problems",
-                    "done": false
+                    "done": true
                 },
                 {
                     "title": "learn calc 2",
@@ -32,12 +32,12 @@
                     "priority": "high"
                 },
                 {
-                    "title": "g",
+                    "title": "learn calc 3",
                     "done": false,
                     "priority": "high"
                 },
                 {
-                    "title": "dd",
+                    "title": "Liner algbra",
                     "done": false,
                     "priority": "low"
                 }
@@ -55,6 +55,31 @@
                     "done": false
                 }
             ]
+        },
+        {
+            "glossary": {
+                "title": "example glossary",
+                "GlossDiv": {
+                    "title": "S",
+                    "GlossList": {
+                        "GlossEntry": {
+                            "ID": "SGML",
+                            "SortAs": "SGML",
+                            "GlossTerm": "Standard Generalized Markup Language",
+                            "Acronym": "SGML",
+                            "Abbrev": "ISO 8879:1986",
+                            "GlossDef": {
+                                "para": "A meta-markup language, used to create markup languages such as DocBook.",
+                                "GlossSeeAlso": [
+                                    "GML",
+                                    "XML"
+                                ]
+                            },
+                            "GlossSee": "markup"
+                        }
+                    }
+                }
+            }
         }
     ]
 }

@@ -22,10 +22,11 @@ from import_export import import_export_roadmaps
 
 
 def main():
-    console = Console()
-    data = load_data()
+  console = Console()
+  data = load_data()
     
     # Show welcome animation on first run
+  try :
     show_welcome_animation()
     
     while True:
@@ -73,7 +74,7 @@ def main():
         ))    
         choice_prompt = Text()
         choice_prompt.append("🎮 Select your choice", style="bold bright_white")
-        choice_prompt.append(" (1-14): ", style="dim")
+        choice_prompt.append(" (1-14) : ", style="dim")
         
         console.print(choice_prompt, end="")
         choice = input().strip()
@@ -175,7 +176,9 @@ def main():
         else:
             console.print(f"\n[bold red]❌ Invalid input![/bold red] Please enter a [bold]number[/bold].")
             time.sleep(2)
-
+  except KeyboardInterrupt:
+        console.print(f"\n[bold red]Program interrupted by user (Ctrl+C), Exiting gracefully.[/bold red]")
+        exit(0)
 if __name__ == "__main__":
     main()
 

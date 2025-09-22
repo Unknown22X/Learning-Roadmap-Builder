@@ -76,7 +76,7 @@ def view_all_roadmaps(data):
         
         # Create roadmap header
         console.print(Panel.fit(
-            f"{status_emoji} [bold]{roadmap['title']}[/bold] [dim]({roadmap.get('category', 'Uncategorized')})[/dim]",
+            f"{status_emoji} [bold]{roadmap.get('title', 'Untitled')}[/bold] [dim]({roadmap.get('category', 'Uncategorized')})[/dim]",
             subtitle=f"[{status_color}]{percent:.1f}% complete[/{status_color}]",
             border_style=status_color,
             box=box.ROUNDED
@@ -236,12 +236,15 @@ def view_progress(data):
     roadmaps_table.add_column("Priority", justify="center", style="yellow")  # New column
 
     for roadmap in data["roadmaps"]:
+        if "title" not in roadmap or "steps" not in roadmap :
+            continue
         steps = roadmap["steps"]
         total = len(steps)
         completed = sum(1 for step in steps if step["done"])
         percent = (completed / total * 100) if total > 0 else 0
         high_priority_steps = sum(1 for step in steps if step.get("priority") == "high")
         roadmaps_table.add_row(roadmap["title"], f"{percent:.1f}%", f"{completed}/{total}", f"🚨{high_priority_steps}")
+        print(f"Adding roadmap: {roadmap['title']}")
     console.print(roadmaps_table)
 
 def Categories(data):
@@ -282,8 +285,8 @@ def Progress_Visualization(data):
     
     # Create overall statistics
     total_roadmaps = len(data["roadmaps"])
-    total_steps = sum(len(roadmap["steps"]) for roadmap in data["roadmaps"])
-    completed_steps = sum(sum(1 for step in roadmap["steps"] if step["done"]) for roadmap in data["roadmaps"])
+    total_steps = sum(len(roadmap.get("steps","")) for roadmap in data["roadmaps"])
+    completed_steps = sum(sum(1 for step in roadmap.get("steps","") if step["done"]) for roadmap in data["roadmaps"])
     overall_percent = (completed_steps / total_steps * 100) if total_steps > 0 else 0
     
     # Overall progress panel
@@ -304,6 +307,9 @@ def Progress_Visualization(data):
     
     # Display each roadmap  
     for roadmap in data["roadmaps"]:
+        if "steps" not in roadmap: 
+             console.print(f"[red bold] Warning: found a roadmap missing title or steps, skipping it. [/]")
+             continue
         steps = roadmap["steps"]
         total = len(steps)
         completed = sum(1 for step in steps if step["done"])
