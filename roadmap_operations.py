@@ -8,7 +8,7 @@ from config import MOTIVATIONAL_TIPS, ANIMATION_DELAY, PRIORITY_ORDER
 import time
 
 def create_roadmap(data):
-    """Create a new learning roadmap with safe dictionary access"""
+    """Create a new learning roadmap"""
     console = Console()
     console.clear()
     console.print(Panel.fit("✨ [bold green]Create New Roadmap[/bold green]", 
@@ -16,14 +16,13 @@ def create_roadmap(data):
                            border_style="green", box=box.DOUBLE))
     console.print()
     
-    # Safe access to categories with default empty list
+    # Safe access to prevent KeyError if categories missing
     categories = data.get("categories", [])
     
     categories_table = Table(show_header=False, box=box.SIMPLE)
     categories_table.add_column("#", style="bold cyan", width=4)
     categories_table.add_column('Category', style="white")
     
-    # Show available categories
     console.print("[bold]Available categories:[/bold]")
     for i, category in enumerate(categories, start=1):
         categories_table.add_row(str(i), f"📂 {category}")
@@ -31,7 +30,6 @@ def create_roadmap(data):
     console.print(f"[dim]{len(categories) + 1}. Add new category[/dim]")
     console.print()
     
-    # Get category choice
     try:
         cat_choice = IntPrompt.ask(
             "[yellow][bold]Select category number[/bold][/]",
@@ -42,12 +40,10 @@ def create_roadmap(data):
         console.print("[red]Invalid selection! Please choose a valid category number.[/red]")
         return
     
-    # Handle category selection
     if cat_choice == len(categories) + 1:
-        # Add new category
         new_category = Prompt.ask("[bold]Enter new category name[/bold]")
         if new_category:
-            # Ensure categories list exists in data
+            # Initialize categories list if missing
             if "categories" not in data:
                 data["categories"] = []
             data["categories"].append(new_category)
@@ -60,14 +56,13 @@ def create_roadmap(data):
         category = categories[cat_choice - 1]
         console.print(f"[cyan]Selected: 📂 {category}[/cyan]")
     
-    # Get roadmap title
     title = Prompt.ask("[bold]Enter roadmap title[/bold]")
     if not title or title.isspace():
         console.print("[red]❌ Title cannot be empty or just spaces.[/]")
         return
     
     if title:
-        # Ensure roadmaps list exists in data
+        # Initialize roadmaps list if missing
         if "roadmaps" not in data:
             data["roadmaps"] = []
         
@@ -86,12 +81,12 @@ def create_roadmap(data):
     ))
 
 def add_step(data):
-    """Add a step to an existing roadmap with safe dictionary access"""
+    """Add a step to an existing roadmap"""
     console = Console()
     console.print(Panel.fit("[bold green]➕ Add Step[/bold green]", 
                            border_style="green", box=box.DOUBLE))
     
-    # Safe access to roadmaps with default empty list
+    # Safe access to prevent KeyError
     roadmaps = data.get("roadmaps", [])
     
     if not roadmaps:
@@ -104,7 +99,7 @@ def add_step(data):
     table.add_column("Title", style="bold orchid")
     
     for i, roadmap in enumerate(roadmaps, start=1):
-        # Safe access to roadmap title with default
+        # Safe access with default value
         title = roadmap.get("title", "Untitled")
         table.add_row(str(i), title)
     
@@ -138,7 +133,7 @@ def add_step(data):
     except:
         priority = "none"
     
-    # Ensure the selected roadmap has a steps list
+    # Ensure steps list exists
     if "steps" not in roadmaps[idx]:
         roadmaps[idx]["steps"] = []
     
@@ -152,7 +147,6 @@ def add_step(data):
         save_data(data)
         time.sleep(0.5)
     
-    # Safe access to roadmap title for confirmation message
     roadmap_title = roadmaps[idx].get("title", "Untitled")
     console.print(Panel.fit(
         f"✅ [bold green]Step '{step_title}' added to '{roadmap_title}'.[/]",
@@ -161,13 +155,12 @@ def add_step(data):
     ))
 
 def mark_step_complete(data):
-    """Mark a step as complete/incomplete with safe dictionary access"""
+    """Mark a step as complete/incomplete"""
     console = Console()
     console.clear()
     console.print(Panel.fit("✨ [bold green]Mark step complete[/bold green]", 
                            border_style="pale_green1", box=box.DOUBLE))
     
-    # Safe access to roadmaps with default empty list
     roadmaps = data.get("roadmaps", [])
     
     if not roadmaps:
@@ -179,7 +172,6 @@ def mark_step_complete(data):
     table.add_column("Title", style="bold grey82")
 
     for i, roadmap in enumerate(roadmaps, start=1):
-        # Safe access to roadmap title with default
         title = roadmap.get("title", "Untitled")
         table.add_row(str(i), title)
     
@@ -199,7 +191,7 @@ def mark_step_complete(data):
         except ValueError:
             console.print("[red]Please enter a number or 'q' to quit.[/red]")
 
-    # Safe access to steps with default empty list
+    # Safe access to steps
     steps = roadmaps[idx].get("steps", [])
     
     if not steps:
@@ -211,7 +203,6 @@ def mark_step_complete(data):
     table.add_column("Title", style="bold hot_pink3")
 
     for i, step in enumerate(steps, start=1):
-        # Safe access to step title with default
         step_title = step.get("title", "Untitled Step")
         table.add_row(str(i), step_title)
     
@@ -231,7 +222,7 @@ def mark_step_complete(data):
         except ValueError:
             console.print("[red]Please enter a number or 'q' to quit.[/red]")
     
-    # Safe access to step done status with default False
+    # Safe toggle of completion status
     current_status = steps[idxs].get("done", False)
     steps[idxs]["done"] = not current_status
     state = "complete" if steps[idxs]["done"] else "incomplete"
@@ -240,7 +231,6 @@ def mark_step_complete(data):
         save_data(data)
         time.sleep(0.5)
     
-    # Safe access to step title for confirmation
     step_title = steps[idxs].get("title", "Untitled Step")
     console.print(Panel.fit(
         f"✅ [bold green]Step '{step_title}' marked as {state}.[/]",
@@ -249,8 +239,7 @@ def mark_step_complete(data):
     ))
 
 def get_highest_priority_score(roadmap):
-    """Get numerical score for roadmap's highest priority step with safe access"""
-    # Safe access to steps with default empty list
+    """Get numerical score for roadmap's highest priority step"""
     steps = roadmap.get("steps", [])
     
     if not steps:
@@ -262,24 +251,19 @@ def get_highest_priority_score(roadmap):
     )
 
 def sort_by_priority(items, is_roadmap=False):
-    """
-    Sort by priority - works for both steps and roadmaps with safe access
-    items: either list of steps or list of roadmaps
-    is_roadmap: True if sorting roadmaps, False if sorting steps
-    """
+    """Sort by priority - works for both steps and roadmaps"""
     if is_roadmap:
         # Sort roadmaps by their highest priority step
         return sorted(items, key=lambda roadmap: get_highest_priority_score(roadmap))
     else:
-        # Sort steps within a roadmap - safe access to priority
+        # Sort steps within a roadmap
         return sorted(items, key=lambda step: PRIORITY_ORDER.get(step.get("priority", "none"), 3))
 
 def sort_roadmaps(data):
-    """Sort roadmaps by various criteria with safe dictionary access"""
+    """Sort roadmaps by various criteria"""
     console = Console()
     console.print(Panel.fit("[red]🗃️  Sort Roadmaps[/]", border_style="red", box=box.DOUBLE))
     
-    # Safe access to roadmaps with default empty list
     roadmaps = data.get("roadmaps", [])
     
     if not roadmaps:
@@ -306,10 +290,9 @@ def sort_roadmaps(data):
         return
 
     if choice == 1:
-        # Sort by title - safe access with default
         roadmaps.sort(key=lambda x: x.get("title", "Untitled").lower())
     elif choice == 2:
-        # Sort by progress - safe access to steps and done status
+        # Sort by progress calculation
         def get_progress(roadmap):
             steps = roadmap.get("steps", [])
             if not steps:
@@ -319,13 +302,11 @@ def sort_roadmaps(data):
         
         roadmaps.sort(key=get_progress, reverse=True)
     elif choice == 3:
-        # Sort by category - safe access with default
         roadmaps.sort(key=lambda x: x.get("category", "Uncategorized"))
     elif choice == 4: 
-        # Sort roadmaps by priority
         data["roadmaps"] = sort_by_priority(roadmaps, is_roadmap=True)
         
-        # Sort steps within each roadmap by priority
+        # Also sort steps within each roadmap by priority
         for roadmap in roadmaps:
             steps = roadmap.get("steps", [])
             if steps:
@@ -342,11 +323,10 @@ def sort_roadmaps(data):
     ))
 
 def edit_roadmap(data):
-    """Edit roadmap or step titles with safe dictionary access"""
+    """Edit roadmap or step titles"""
     console = Console()
     console.clear()
     
-    # Beautiful header
     console.print(Panel.fit(
         "✏️  [bold cyan]Edit Roadmap/Step[/bold cyan]",
         subtitle="[dim]Modify your learning content[/dim]",
@@ -355,7 +335,6 @@ def edit_roadmap(data):
     ))
     console.print()
     
-    # Safe access to roadmaps with default empty list
     roadmaps = data.get("roadmaps", [])
     
     if not roadmaps:
@@ -367,7 +346,6 @@ def edit_roadmap(data):
         ))
         return
 
-    # Display roadmaps in a table
     roadmap_table = Table(title="🗺️       Select Roadmap to Edit", box=box.ROUNDED)
     roadmap_table.add_column("#", style="bold cyan", width=4, justify="center")
     roadmap_table.add_column("Roadmap", style="bold white")
@@ -375,7 +353,6 @@ def edit_roadmap(data):
     roadmap_table.add_column("Steps", style="green", justify="center")
     
     for i, roadmap in enumerate(roadmaps, start=1):
-        # Safe access to roadmap properties with defaults
         title = roadmap.get("title", "Untitled")
         category = roadmap.get("category", "Uncategorized")
         steps = roadmap.get("steps", [])
@@ -386,7 +363,6 @@ def edit_roadmap(data):
     console.print(roadmap_table)
     console.print()
 
-    # Get roadmap selection
     try:
         roadmap_num = IntPrompt.ask(
             "[bold]Select roadmap number[/bold]",
@@ -399,7 +375,6 @@ def edit_roadmap(data):
     
     roadmap_idx = roadmap_num - 1
 
-    # Edit options
     console.print()
     console.print(Panel.fit(
         "⚙️  [bold]Edit Options[/bold]",
@@ -430,7 +405,6 @@ def edit_roadmap(data):
             console.print("[red]❌ Title cannot be empty![/red]")
             return
             
-        # Safe access to current title with default
         old_title = roadmaps[roadmap_idx].get("title", "Untitled")
         roadmaps[roadmap_idx]["title"] = new_title.strip()
         
@@ -448,7 +422,6 @@ def edit_roadmap(data):
         
     else:
         # Edit step title
-        # Safe access to steps with default empty list
         steps = roadmaps[roadmap_idx].get("steps", [])
         
         if not steps:
@@ -460,14 +433,12 @@ def edit_roadmap(data):
             ))
             return
 
-        # Display steps table
         steps_table = Table(title="📋 Select Step to Edit", box=box.ROUNDED)
         steps_table.add_column("#", style="bold cyan", width=4, justify="center")
         steps_table.add_column("Current Title", style="bold white")
         steps_table.add_column("Status", style="green", justify="center")
         
         for i, step in enumerate(steps, start=1):
-            # Safe access to step properties with defaults
             step_title = step.get("title", "Untitled Step")
             is_done = step.get("done", False)
             status = "✅ Done" if is_done else "⏳ Pending"
@@ -488,13 +459,11 @@ def edit_roadmap(data):
             
         step_idx = step_num - 1
         
-        # Get new step title
         new_step_title = Prompt.ask("[bold]Enter new step title[/bold]")
         if not new_step_title.strip():
             console.print("[red]❌ Step title cannot be empty![/red]")
             return
             
-        # Safe access to current step title with default
         old_step_title = steps[step_idx].get("title", "Untitled Step")
         steps[step_idx]["title"] = new_step_title.strip()
         
@@ -511,7 +480,7 @@ def edit_roadmap(data):
         ))
 
 def delete_roadmap_or_step(data):
-    """Delete roadmap or step with safe dictionary access"""
+    """Delete roadmap or step"""
     console = Console()
     console.print(Panel.fit("[red]🗑️  Delete Roadmap/Step[/]", 
                            border_style="red", box=box.DOUBLE))
@@ -526,7 +495,6 @@ def delete_roadmap_or_step(data):
         console.print("[red]Invalid selection![/red]")
         return
          
-    # Safe access to roadmaps with default empty list
     roadmaps = data.get("roadmaps", [])
     
     if not roadmaps:
@@ -539,7 +507,6 @@ def delete_roadmap_or_step(data):
     roadmap_table.add_column("Roadmap", style="bold orchid", justify='center')
     
     for i, roadmap in enumerate(roadmaps, start=1):
-        # Safe access to roadmap title with default
         title = roadmap.get('title', 'Untitled')
         roadmap_table.add_row(str(i), title)
     
@@ -559,7 +526,6 @@ def delete_roadmap_or_step(data):
 
     if oper == 1:  
         # Delete entire roadmap
-        # Safe access to roadmap title for confirmation
         roadmap_title = roadmaps[roadmap_idx].get('title', 'Untitled')
         
         try: 
@@ -588,7 +554,6 @@ def delete_roadmap_or_step(data):
 
     elif oper == 2:
         # Delete step from roadmap
-        # Safe access to steps with default empty list
         steps = roadmaps[roadmap_idx].get("steps", [])
         
         if not steps:
@@ -601,7 +566,6 @@ def delete_roadmap_or_step(data):
         console.print()
         
         for i, step in enumerate(steps, start=1): 
-            # Safe access to step title with default
             step_title = step.get("title", "Untitled Step")
             steps_table.add_row(str(i), step_title)
         
@@ -620,7 +584,6 @@ def delete_roadmap_or_step(data):
             
         step_idx = int(step_num) - 1
         
-        # Safe access to step title for confirmation
         step_title = steps[step_idx].get('title', 'Untitled Step')
         
         confirm = Confirm.ask(f"Are you sure you want to delete '{step_title}'?", console=console)
@@ -638,7 +601,7 @@ def delete_roadmap_or_step(data):
             return
 
 def search(data):
-    """Search roadmaps by title, category or step content with safe dictionary access"""
+    """Search roadmaps by title, category or step content"""
     console = Console()
     console.clear()
     console.print(Panel.fit(
@@ -649,7 +612,6 @@ def search(data):
     ))
     console.print()
     
-    # Safe access to roadmaps with default empty list
     roadmaps = data.get("roadmaps", [])
     
     if not roadmaps:
@@ -666,30 +628,25 @@ def search(data):
         console.print("[red]Invalid input! Please enter a valid keyword.[/red]")
         return
     
-    # Collect matches
     roadmaps_results = []
     steps_results = []
     
     for roadmap in roadmaps:
-        # Safe access to roadmap properties with defaults
         title = roadmap.get("title", "Untitled")
         category = roadmap.get("category", "")
         steps = roadmap.get("steps", [])
         
         match_reasons = []
         
-        # Check if keyword matches roadmap title
+        # Check matches in roadmap properties
         if keyword in title.lower():
             match_reasons.append("Title")
-            
-        # Check if keyword matches category
         if keyword in category.lower():
             match_reasons.append("Category")
         
         # Search in steps
         match_steps = []
         for step in steps:
-            # Safe access to step title with default
             step_title = step.get("title", "Untitled Step")
             if keyword in step_title.lower():
                 match_steps.append(step)
@@ -701,7 +658,6 @@ def search(data):
         if match_reasons:
             roadmaps_results.append((roadmap, ", ".join(match_reasons)))
     
-    # Display results 
     if not roadmaps_results and not steps_results:
         console.print(f"[red]No matches found for '{keyword}'.[/red]")
         return        
@@ -716,7 +672,6 @@ def search(data):
         table.add_column("Matched On", style="yellow")
         
         for i, (roadmap, reasons) in enumerate(roadmaps_results, start=1):
-            # Safe access to roadmap properties for display
             title = roadmap.get("title", "Untitled")
             category = roadmap.get("category", "Uncategorized")
             steps = roadmap.get("steps", [])
@@ -737,7 +692,6 @@ def search(data):
         table.add_column("Status", style="green")
         
         for i, (roadmap, step) in enumerate(steps_results, start=1):
-            # Safe access to step and roadmap properties
             step_title = step.get("title", "Untitled Step")
             roadmap_title = roadmap.get("title", "Untitled")
             is_done = step.get("done", False)
@@ -772,28 +726,19 @@ def show_help():
         box=box.ROUNDED
     ))
 
-# Additional helper functions for safe data handling
-
 def validate_data_structure(data):
-    """
-    Validate and fix data structure to ensure required keys exist
-    This function can be called at startup to ensure data integrity
-    """
-    # Ensure main data structure exists
+    """Validate and fix data structure to ensure required keys exist"""
     if not isinstance(data, dict):
         data = {}
     
-    # Ensure categories list exists with .get() for safety
     if "categories" not in data:
         data["categories"] = []
     
-    # Ensure roadmaps list exists with .get() for safety  
     if "roadmaps" not in data:
         data["roadmaps"] = []
     
-    # Validate each roadmap structure
+    # Fix any roadmaps missing required fields
     for roadmap in data.get("roadmaps", []):
-        # Ensure each roadmap has required fields
         if "title" not in roadmap:
             roadmap["title"] = "Untitled"
         if "category" not in roadmap:
@@ -801,7 +746,7 @@ def validate_data_structure(data):
         if "steps" not in roadmap:
             roadmap["steps"] = []
             
-        # Validate each step structure
+        # Fix steps missing required fields            
         for step in roadmap.get("steps", []):
             if "title" not in step:
                 step["title"] = "Untitled Step"
@@ -811,13 +756,11 @@ def validate_data_structure(data):
                 step["priority"] = "none"
     
     return data
-
 def get_roadmap_stats(roadmap):
     """
-    Get statistics for a roadmap with safe dictionary access
+    Calculates roadmap completion statistics.
     Returns: dict with total_steps, completed_steps, progress_percent
     """
-    # Safe access to steps with default empty list
     steps = roadmap.get("steps", [])
     total_steps = len(steps)
     
@@ -828,7 +771,6 @@ def get_roadmap_stats(roadmap):
             "progress_percent": 0.0
         }
     
-    # Count completed steps safely
     completed_steps = sum(1 for step in steps if step.get("done", False))
     progress_percent = (completed_steps / total_steps) * 100
     
@@ -840,10 +782,9 @@ def get_roadmap_stats(roadmap):
 
 def get_priority_color(priority):
     """
-    Get color for priority level with safe access
+    Gets a color string for a priority level.
     Returns appropriate color string for rich console
     """
-    # Safe access to priority with default "none"
     priority = str(priority).lower() if priority else "none"
     
     color_map = {
@@ -857,15 +798,13 @@ def get_priority_color(priority):
 
 def format_step_display(step, include_priority=True):
     """
-    Format a step for display with safe dictionary access
+    Formats a step for console display.
     Returns formatted string for console output
     """
-    # Safe access to step properties with defaults
     title = step.get("title", "Untitled Step")
     done = step.get("done", False)
     priority = step.get("priority", "none")
     
-    # Status indicator
     status_icon = "✅" if done else "❌"
     
     if include_priority and priority != "none":
@@ -876,7 +815,7 @@ def format_step_display(step, include_priority=True):
 
 def safe_get_nested(data, keys, default=None):
     """
-    Safely get nested dictionary values
+    Gets a value from a nested dictionary or list.
     Usage: safe_get_nested(data, ['roadmaps', 0, 'title'], 'Default Title')
     """
     try:

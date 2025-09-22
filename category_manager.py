@@ -7,11 +7,10 @@ from rich.console import Console
 from rich.prompt import Prompt, IntPrompt, Confirm
 
 def manage_categories(data):
-    """Main category management menu - allows viewing, adding, editing, and deleting categories"""
+    """Main menu for category management."""
     console = Console()
     
     while True:
-        # Clear screen and display main category management header
         console.clear()
         console.print(Panel.fit(
             "🗂️  [bold yellow]Manage Categories[/bold yellow]",
@@ -21,13 +20,12 @@ def manage_categories(data):
         ))
         console.print()
         
-        # Create and display menu options table
         options_table = Table(show_header=False, box=box.SIMPLE)
-        options_table.add_row("1. [bold cyan]👀 View all categories[/bold cyan]")      # Option 1: View categories
-        options_table.add_row("2. [bold green]➕ Add category[/bold green]")           # Option 2: Add new category
-        options_table.add_row("3. [bold blue]✏️ Edit category[/bold blue]")           # Option 3: Edit existing category
-        options_table.add_row("4. [bold red]🗑️ Delete category[/bold red]")           # Option 4: Delete category
-        options_table.add_row("5. [dim]↩️ Back to main menu[/dim]")                   # Option 5: Return to main menu
+        options_table.add_row("1. [bold cyan]👀 View all categories[/bold cyan]")
+        options_table.add_row("2. [bold green]➕ Add category[/bold green]")
+        options_table.add_row("3. [bold blue]✏️ Edit category[/bold blue]")
+        options_table.add_row("4. [bold red]🗑️ Delete category[/bold red]")
+        options_table.add_row("5. [dim]↩️ Back to main menu[/dim]")
         console.print(options_table)
         console.print()
         
@@ -38,27 +36,26 @@ def manage_categories(data):
                 show_choices=False
             )
             
-            if choice == "5" or choice.lower() == "q":
+            if choice in ("5", "q"):
                 break
                 
             if choice == "1":
-                view_categories(data)      # Show all categories
+                view_categories(data)
             elif choice == "2":
-                add_category(data)         # Add new category
+                add_category(data)
             elif choice == "3":
-                edit_category(data)        # Edit existing category
+                edit_category(data)
             elif choice == "4":
-                delete_category(data)      # Delete category
+                delete_category(data)
                 
         except KeyboardInterrupt:
-            # Handle Ctrl+C gracefully
             break
         except:
             console.print("[red]❌ Invalid selection![/red]")
             time.sleep(1)
 
 def view_categories(data):
-    """Display all categories in a formatted table with usage statistics"""
+    """Displays all categories and their usage count."""
     console = Console()
     console.clear()
     
@@ -76,18 +73,15 @@ def view_categories(data):
             box=box.ROUNDED
         ))
     else:
-        # Create table to display categories with their usage info
         cat_table = Table(title="📊 Category Overview", box=box.ROUNDED)
-        cat_table.add_column("#", style="bold cyan", width=4, justify="center")        # Column 1: Category number
-        cat_table.add_column("Category", style="bold white")                           # Column 2: Category name
-        cat_table.add_column("Roadmaps", style="green", justify="center")              # Column 3: Number of roadmaps using this category
-        cat_table.add_column("Status", style="dim", justify="center")                  # Column 4: Usage status (Used/Empty)
+        cat_table.add_column("#", style="bold cyan", width=4, justify="center")
+        cat_table.add_column("Category", style="bold white")
+        cat_table.add_column("Roadmaps", style="green", justify="center")
+        cat_table.add_column("Status", style="dim", justify="center")
         
-        # Populate table with category data
         for i, category in enumerate(data["categories"], start=1):
-            # Count how many roadmaps use this category
             count = sum(1 for roadmap in data["roadmaps"] if roadmap.get("category") == category)
-            status = "✅ Used" if count > 0 else "📭 Empty"  # Show status based on usage
+            status = "✅ Used" if count > 0 else "📭 Empty"
             cat_table.add_row(str(i), category, str(count), status)
         
         console.print(cat_table)  
@@ -96,7 +90,7 @@ def view_categories(data):
     Prompt.ask("[dim]Press Enter to continue...[/dim]", default="", show_default=False)
 
 def add_category(data):
-    """Add a new category to the system"""
+    """Adds a new category."""
     console = Console()
     console.clear()
     
@@ -110,10 +104,8 @@ def add_category(data):
     new_category = Prompt.ask("[bold]Enter new category name[/bold]")
     
     if not new_category.strip():
-        # Error: Empty category name
         console.print("[red]❌ Category name cannot be empty![/red]")
     elif new_category in data["categories"]:
-        # Error: Category already exists
         console.print("[yellow]⚠️ Category already exists![/yellow]")
     else:
         data["categories"].append(new_category)
@@ -128,7 +120,7 @@ def add_category(data):
     Prompt.ask("[dim]Press Enter to continue...[/dim]", default="", show_default=False)
 
 def edit_category(data):
-    """Edit an existing category name and update all roadmaps using it"""
+    """Edits an existing category."""
     console = Console()
     console.clear()
     
@@ -168,7 +160,7 @@ def edit_category(data):
         console.print()
         new_category = Prompt.ask(
             f"[bold]Enter new name for '{old_category}'[/bold]",
-            default=old_category  # Pre-fill with current name
+            default=old_category
         )
         
         if not new_category.strip():
@@ -176,13 +168,11 @@ def edit_category(data):
         elif new_category != old_category and new_category in data["categories"]:
             console.print("[yellow]⚠️ Category already exists![/yellow]")
         else:
-            # Update all roadmaps that use the old category name
             if new_category != old_category:
                 for roadmap in data["roadmaps"]:
                     if roadmap.get("category") == old_category:
                         roadmap["category"] = new_category 
             
-            # Update the category in the categories list
             data["categories"][choice - 1] = new_category
             save_data(data)  
             
@@ -200,7 +190,7 @@ def edit_category(data):
     Prompt.ask("[dim]Press Enter to continue...[/dim]", default="", show_default=False)
 
 def delete_category(data):
-    """Delete a category after checking if it's used by any roadmaps"""
+    """Deletes an unused category."""
     console = Console()
     console.clear()
     
@@ -245,9 +235,8 @@ def delete_category(data):
                 border_style="red",
                 box=box.ROUNDED
             ))
-            # ADD THIS LINE TO PAUSE BEFORE RETURNING:
             Prompt.ask("[dim]Press Enter to continue...[/dim]", default="", show_default=False)
-            return  # ← This return was already here
+            return
             
         if Confirm.ask(f"[bold red]Are you sure you want to delete '{category}'?[/bold red]"):
             data["categories"].pop(choice - 1)

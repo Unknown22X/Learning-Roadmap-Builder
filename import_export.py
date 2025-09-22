@@ -1,3 +1,4 @@
+# Imports for various functionalities
 import json
 import time
 import pandas as pd
@@ -12,12 +13,13 @@ from config import ROADMAP_SCHEMA
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 
-
+# Initialize the rich console object for terminal output
 console = Console()
 
-
+# --- Utility Functions ---
 
 def print_panel(message, subtitle="", success=True):
+    """Prints a formatted panel with a success or error message."""
     border_color = "bright_green" if success else "red"
     icon = "✅" if success else "❌"
     console.print()
@@ -27,14 +29,18 @@ def print_panel(message, subtitle="", success=True):
         border_style=border_color,
         box=box.ROUNDED
     ))
+
 def sanitize(text):
+    """Sanitizes text for FPDF compatibility."""
     return (
-        text.replace("✓", "v")   
-            .replace("✗", "x")   
-            .encode('latin-1', 'replace')
-            .decode('latin-1')
+        text.replace("✓", "v")  # Replace checkmark with 'v'
+        .replace("✗", "x")  # Replace cross with 'x'
+        .encode('latin-1', 'replace')  # Encode with a safe character set
+        .decode('latin-1')
     )
+
 def validate_imported_roadmap(roadmap):
+    """Validates a roadmap dictionary against a predefined schema."""
     try:
         validate(instance=roadmap, schema=ROADMAP_SCHEMA)
         return True
@@ -42,7 +48,10 @@ def validate_imported_roadmap(roadmap):
         console.print(f"[red]Invalid roadmap JSON: {e.message}[/red]")
         return False
 
+# --- Export Functions ---
+
 def to_json(data, filename, idx):
+    """Exports a specific roadmap to a JSON file."""
     if not filename.endswith('.json'):
         filename += '.json'
     try:
@@ -59,6 +68,7 @@ def to_json(data, filename, idx):
 from fpdf import FPDF
 
 def to_pdf(data, filename, idx):
+    """Exports a specific roadmap to a PDF file."""
     if not filename.endswith('.pdf'):
         filename += '.pdf'
 
@@ -118,8 +128,8 @@ def to_pdf(data, filename, idx):
         return False
 
 
-
 def to_csv(data, filename, idx):
+    """Exports a specific roadmap to a CSV file using pandas."""
     if not filename.endswith('.csv'):
         filename += '.csv'
     roadmap = data["roadmaps"][idx]
@@ -140,6 +150,7 @@ def to_csv(data, filename, idx):
         return False
 
 def to_markdown(data, filename, idx):
+    """Exports a specific roadmap to a Markdown file."""
     if not filename.endswith('.md'):
         filename += '.md'
     roadmap = data['roadmaps'][idx]
@@ -165,7 +176,10 @@ def to_markdown(data, filename, idx):
         console.print(f"[bold red]{error_message}[/bold red]")
         return False
 
+# --- User Interface Functions ---
+
 def choose_file_type():
+    """Prompts the user to select an export file type."""
     options = ["json", "pdf", "markdown", "csv"]
     try:
         table = Table(title="🗃️ File Type")
@@ -187,6 +201,7 @@ def choose_file_type():
             console.print("[red]Enter a valid choice[/red]")
 
 def import_export_roadmaps(data):
+    """Main function to handle the import and export menu."""
     console.clear()
     console.print(Panel.fit(
         "💾 [bold magenta]Import/Export Roadmaps[/bold magenta]",
@@ -286,10 +301,10 @@ def import_export_roadmaps(data):
                 time.sleep(0.5)
 
             if validate_imported_roadmap(roadmap):
-              data["roadmaps"].append(roadmap)
-              save_data(data)
+                data["roadmaps"].append(roadmap)
+                save_data(data)
             else:
-              console.print("[red]Import failed due to invalid JSON structure.[/red]")
+                console.print("[red]Import failed due to invalid JSON structure.[/red]")
 
             print_panel("Successfully imported!", f"Roadmap: {roadmap['title']}", True)
 

@@ -12,11 +12,10 @@ from config import MOTIVATIONAL_TIPS, ANIMATION_DELAY
 from data_manager import get_user_stats
 
 def show_welcome_animation():
-    """Display an animated welcome screen"""
+    """Displays an animated welcome screen with a title and message."""
     console = Console()
     console.clear()
     
-    # Animated title
     title_frames = [
         "🎯 Learning Roadmap Builder",
         "🎯 Learning Roadmap Builder ✨",
@@ -33,7 +32,6 @@ def show_welcome_animation():
         ), justify="center")
         time.sleep(ANIMATION_DELAY)
     
-    # Welcome message
     welcome_text = Text()
     welcome_text.append("Welcome to your personal learning companion! ", style="bright_cyan")
     welcome_text.append("🌟", style="yellow")
@@ -42,8 +40,9 @@ def show_welcome_animation():
     console.print(Align.center(welcome_text))
     console.print()
     time.sleep(1)
+
 def create_menu_panel():
-    """Create a beautiful 4-column menu with proper spacing"""
+    """Creates a 4-column rich panel menu for the main interface."""
     # Create menu sections with optimized widths
     view_section = Table(show_header=False, box=None, padding=(0, 1), width=32)
     view_section.add_row("📋 [bold cyan]1[/bold cyan] View Roadmaps", "Browse paths")
@@ -103,34 +102,26 @@ def create_menu_panel():
     return [view_panel, manage_panel, organize_panel, tools_panel]
 
 def create_stats_display(data):
-    """Create a beautiful stats display"""
+    """Generates a rich panel displaying user progress statistics."""
     stats = get_user_stats(data)
     
-    # Create stats table
     stats_table = Table(show_header=False, box=None)
     stats_table.add_column(justify="center", style="bold")
     stats_table.add_column(justify="center")
     
-    # Determine progress emoji and color
     rate = stats["completion_rate"]
     if rate == 0:
-        progress_emoji, progress_color = "💤", "red"
-        progress_msg = "Ready to start!"
+        progress_emoji, progress_color, progress_msg = "💤", "red", "Ready to start!"
     elif rate < 25:
-        progress_emoji, progress_color = "🌱", "yellow" 
-        progress_msg = "Getting started"
+        progress_emoji, progress_color, progress_msg = "🌱", "yellow", "Getting started" 
     elif rate < 50:
-        progress_emoji, progress_color = "🚶‍♂️", "blue"
-        progress_msg = "Making progress"
+        progress_emoji, progress_color, progress_msg = "🚶‍♂️", "blue", "Making progress"
     elif rate < 75:
-        progress_emoji, progress_color = "🚀", "green"
-        progress_msg = "Great momentum!"
+        progress_emoji, progress_color, progress_msg = "🚀", "green", "Great momentum!"
     elif rate < 100:
-        progress_emoji, progress_color = "🔥", "bright_green"
-        progress_msg = "Almost there!"
+        progress_emoji, progress_color, progress_msg = "🔥", "bright_green", "Almost there!"
     else:
-        progress_emoji, progress_color = "🎉", "bold green"
-        progress_msg = "All completed!"
+        progress_emoji, progress_color, progress_msg = "🎉", "bold green", "All completed!"
     
     stats_table.add_row(f"{progress_emoji}", f"[{progress_color}]{rate:.1f}% Complete[/{progress_color}]")
     stats_table.add_row("🗺️", f"[cyan]{stats['roadmaps']}[/cyan] Roadmaps")
@@ -146,7 +137,7 @@ def create_stats_display(data):
     )
 
 def show_motivational_tip():
-    """Display a random motivational tip"""
+    """Displays a random motivational tip in a rich panel."""
     tip = random.choice(MOTIVATIONAL_TIPS)
     
     return Panel.fit(
@@ -156,7 +147,7 @@ def show_motivational_tip():
     )
 
 def show_loading_animation():
-    """Display a loading animation"""
+    """Displays a simple progress bar loading animation."""
     console = Console()
     with Progress(
         TextColumn("[bold blue]Loading your progress[/bold blue]"),
@@ -170,7 +161,7 @@ def show_loading_animation():
             time.sleep(0.02)
 
 def get_motivational_message(percent):
-    """Get motivational message based on progress percentage"""
+    """Returns a motivational message based on a given percentage."""
     if percent == 0:
         return "Every expert was once a beginner. Start your journey today! 🚀"
     elif percent < 25:

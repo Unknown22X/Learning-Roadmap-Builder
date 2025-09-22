@@ -244,7 +244,8 @@ def view_progress(data):
         percent = (completed / total * 100) if total > 0 else 0
         high_priority_steps = sum(1 for step in steps if step.get("priority") == "high")
         roadmaps_table.add_row(roadmap["title"], f"{percent:.1f}%", f"{completed}/{total}", f"🚨{high_priority_steps}")
-        print(f"Adding roadmap: {roadmap['title']}")
+
+        
     console.print(roadmaps_table)
 
 def Categories(data):
