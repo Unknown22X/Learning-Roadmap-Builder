@@ -1,6 +1,7 @@
 # Imports for various functionalities
 import json
 import time
+import os 
 import pandas as pd
 from fpdf import FPDF
 from data_manager import save_data
@@ -17,18 +18,23 @@ from jsonschema.exceptions import ValidationError
 console = Console()
 
 # --- Utility Functions ---
-
 def print_panel(message, subtitle="", success=True):
-    """Prints a formatted panel with a success or error message."""
     border_color = "bright_green" if success else "red"
     icon = "✅" if success else "❌"
     console.print()
+    if success and subtitle.startswith("File: "):
+        filename = subtitle.replace("File: ", "")
+        full_path = os.path.abspath(filename)
+        subtitle = f"File: {full_path}"
     console.print(Panel.fit(
         f"{icon} {message}" if success else f"{icon} [red]{message}[/red]",
         subtitle=f"[dim]{subtitle}[/dim]",
         border_style=border_color,
         box=box.ROUNDED
     ))
+    console.print("[dim]💡 Find your file on your Desktop or in the project folder.[/dim]")
+    console.print("[dim]PDFs can be opened with any PDF viewer (e.g., Adobe Acrobat).[/dim]")
+    console.print("[dim]CSVs can be opened with Excel or Google Sheets.[/dim]")
 
 def sanitize(text):
     """Sanitizes text for FPDF compatibility."""
@@ -54,6 +60,7 @@ def to_json(data, filename, idx):
     """Exports a specific roadmap to a JSON file."""
     if not filename.endswith('.json'):
         filename += '.json'
+    filename = os.path.join(os.path.expanduser("~/Desktop"), filename)
     try:
         with console.status("[bold green]Exporting roadmap...[/]"):
             with open(filename, "w") as f:
@@ -71,7 +78,7 @@ def to_pdf(data, filename, idx):
     """Exports a specific roadmap to a PDF file."""
     if not filename.endswith('.pdf'):
         filename += '.pdf'
-
+    filename = os.path.join(os.path.expanduser("~/Desktop"), filename)
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Courier", size=12)
@@ -132,6 +139,9 @@ def to_csv(data, filename, idx):
     """Exports a specific roadmap to a CSV file using pandas."""
     if not filename.endswith('.csv'):
         filename += '.csv'
+
+    filename = os.path.join(os.path.expanduser("~/Desktop"), filename)
+
     roadmap = data["roadmaps"][idx]
     try:
         df = pd.json_normalize(
@@ -153,6 +163,7 @@ def to_markdown(data, filename, idx):
     """Exports a specific roadmap to a Markdown file."""
     if not filename.endswith('.md'):
         filename += '.md'
+    filename = os.path.join(os.path.expanduser("~/Desktop"), filename)
     roadmap = data['roadmaps'][idx]
     md = f"# {roadmap['title']}\n\n"
     if "category" in roadmap:
@@ -170,6 +181,7 @@ def to_markdown(data, filename, idx):
         with open(filename, 'w' , encoding='utf-8') as f:
             f.write(md)
         print_panel("Successfully exported!", f"File: {filename}", True)
+        
         return True
     except OSError as e:
         error_message = f"Failed to write markdown file: {e}"

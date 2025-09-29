@@ -17,10 +17,10 @@ def show_welcome_animation():
     console.clear()
     
     title_frames = [
-        "🎯 Learning Roadmap Builder",
-        "🎯 Learning Roadmap Builder ✨",
-        "🎯 Learning Roadmap Builder ✨🚀",
-        "🎯 Learning Roadmap Builder ✨🚀💡"
+        "🎯 QuestAxis",
+        "🎯 QuestAxis ✨",
+        "🎯 QuestAxis ✨🚀",
+        "🎯 QuestAxis ✨🚀💡"
     ]
     
     for frame in title_frames:

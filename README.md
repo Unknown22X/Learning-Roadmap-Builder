@@ -1,181 +1,254 @@
-<!-- # Learning Roadmap Builder -->
-<!-- 
-A command-line tool for organizing and tracking your learning goals.
+# QuestAxis 
 
-## Usage
+<br />
+<div align="center">
+  <a href="https://github.com/Unknown22X/QuestAxis">
+    <img src="images/img.png" alt="overview" >
+  </a>
 
-- Simple CLI interface
-- Example commands provided in documentation
+  <h3 align="center">A Command-Line Learning Roadmap Application</h3>
 
-**Requirements:**  
-- Python 3 (no external libraries needed) -->
+  <p align="center"> 
+    <a href="https://github.com/Unknown22X/QuestAxis"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="to edit">View Demo (CS50)</a>
+    &middot;
+    <a href="https://github.com/Unknown22X/QuestAxis/issues/new?labels=bug&template=bug-report.md">Report Bug</a>
+    &middot;
+    <a href="https://github.com/Unknown22X/QuestAxis/issues/new?labels=enhancement&template=feature-request.md">Request Feature</a>
+  </p>
+</div>
 
-# 🎯 Learning Roadmap Builder
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#overview">Overview</a>
+      <ul>
+        <li><a href="#demo">Demo</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#key-features
+">Key Features
+</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
 
-> Your Personal Learning Companion - Transform your learning journey with beautiful, interactive roadmaps!
 
-[![Python Version](https://img.shields.io/badge/python-3.10+-blue.svg)](https://python.org)
+
+[![Python Version](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-Active-brightgreen.svg)]()
 
-## ✨ Overview
+##  Overview
 
-Learning Roadmap Builder is a beautiful, terminal-based application that helps you organize, track, and visualize your learning journey. Whether you're mastering programming languages, developing new skills, or pursuing educational goals, this tool transforms your progress into an engaging, visual experience.
+Hello I am Jory, a 15yo self-learner, and **QuestAxis** is my final project for Harvard’s CS50 course. **QuestAxis** is a command-line interface (CLI) application designed to create, manage, and visualize learning roadmaps, enabling users to structure goals such as mastering calculus through steps like “Learn Limits” or “Practice Derivatives.” Developed using Python and the rich library, it offers an intuitive interface with progress tracking, search functionality, and export options (e.g., PDF, CSV). Inspired by my need to organize my self-study
 
-## 🌟 Key Features
+it is for anyone who want to learn 🌌! 
 
-### 📋 **Roadmap Management**
-- Create unlimited learning roadmaps
-- Organize roadmaps by categories (Programming, Design, Languages, Business, etc.)
-- Add custom categories for personalized organization
-- Edit roadmap titles and descriptions
 
-### ✅ **Progress Tracking**
-- Break down learning goals into manageable steps
-- Mark steps as complete/incomplete
-- Visual progress bars with completion percentages
-- Real-time statistics and analytics
+#### [Youtube Video Demo](to edit)
 
-### 🎨 **Beautiful Visualizations**
-- Rich, colorful terminal interface powered by Rich library
-- Animated welcome screens and loading effects
-- Progress visualization with emojis and color coding
-- Motivational messages based on your progress level
+*****
 
-### 🗂️ **Organization Tools**
-- Category management system
-- Sort roadmaps by title, progress, or category
-- Filter roadmaps by category
-- Comprehensive overview dashboards
+## Demo
+![QuestAxis Demo](./images/demo.gif)
 
-### 💾 **Data Management**
-- Import/Export roadmaps as JSON files
-- Automatic data persistence
-- Backup and share your learning paths
-- Safe deletion with confirmation prompts
 
-### 🎯 **Smart Analytics**
-- Overall progress tracking across all roadmaps
-- Category-wise progress breakdowns
-- Completion statistics and trends
-- Performance insights and recommendations
+## About the Project
 
-## 🚀 Quick Start
+QuestAxis empowers users to organize their learning by creating structured roadmaps, tracking progress, and visualizing achievements. It is designed for anyone who wants to learn efficiently, from students to self-learners.
+
+
+### Key Features
+
+#### Roadmap Management
+- Create unlimited learning roadmaps.
+- Organize roadmaps by categories (e.g., Programming, Mathematics, Languages).
+- Add custom categories for personalized organization.
+- Edit roadmap titles and descriptions.
+
+#### Progress Tracking
+- Break down goals into manageable steps.
+- Mark steps as complete or incomplete.
+- Display visual progress bars with completion percentages.
+- Provide real-time statistics and analytics.
+
+#### Visual Interface
+- Utilize the `rich` library for a colorful, user-friendly terminal interface.
+- Feature animated welcome screens and loading effects.
+- Visualize progress with emojis and color-coded indicators.
+- Offer motivational messages based on progress.
+
+#### Organization Tools
+- Manage categories efficiently.
+- Sort roadmaps by title, progress, or category.
+- Filter roadmaps by category.
+- Present comprehensive overview dashboards.
+
+#### Data Management
+- Import and export roadmaps in JSON, PDF, CSV, or Markdown formats.
+- Ensure automatic data persistence in `data.json`.
+- Support backups and sharing of learning paths.
+- Implement safe deletion with confirmation prompts.
+
+#### Analytics
+- Track overall progress across roadmaps.
+- Provide category-specific progress breakdowns.
+- Display completion statistics and trends.
+- Offer insights and recommendations for learning efficiency..
+
+## Getting Started
 
 ### Prerequisites
-
-Make sure you have Python 3.10+ installed on your system.
+- Python 3.10 or higher installed on your system.
 
 ### Installation
 
-1. **Clone the repository:**
+1. **Clone the repository :**
    ```bash
-   git clone https://github.com/yourusername/learning-roadmap-builder.git
-   cd learning-roadmap-builder
+   git clone https://github.com/Unknown22X/QuestAxis
+   cd QuestAxis
    ```
 
-2. **Install required dependencies:**
+
+1. **Install required dependencies:**
    ```bash
-   pip install rich matplotlib numpy
+   pip install requirements.txt
    ```
 
-3. **Run the application:**
+2. **Run the app:**
    ```bash
    python main.py
    ```
 
 ### First Steps
 
-1. **Launch the app** - You'll be greeted with an animated welcome screen
-2. **Create your first roadmap** - Choose option 2 from the main menu
-3. **Add learning steps** - Use option 3 to break down your goals
-4. **Track progress** - Mark steps complete with option 4
-5. **Visualize progress** - See beautiful progress displays with option 10
-
-## 📖 Detailed Usage Guide
+1. Launch QuestAxis to view the animated welcome screen.
+2. Select “Create Roadmap” (option 2) from the main menu.
+3. Add learning steps (option 3) to break down your goals.
+4. Mark steps as complete (option 4) to track progress.
+5. Visualize progress with graphical displays (option 10).
+   
+## Detailed Usage Guide
 
 ### Creating Roadmaps
-
-1. Select **"Create Roadmap"** from the main menu
-2. Choose an existing category or create a new one
-3. Enter a descriptive title for your learning path
-4. Start adding steps to build your roadmap
+1. Select “Create Roadmap” from the main menu.
+2. Choose or create a category (e.g., Mathematics).
+3. Enter a roadmap title (e.g., “Master Calculus”).
+4. Add steps to structure your learning path.
 
 ### Managing Categories
-
-Access the **"Manage Categories"** section to:
-- View all categories with roadmap counts
-- Add new categories for better organization
-- Delete unused categories (with safety checks)
+Access the “Manage Categories” section to:
+- View all categories with associated roadmap counts.
+- Add new categories for organization.
+- Delete unused categories with safety checks.
 
 ### Progress Visualization
-
-The **"Progress Visualization"** feature offers:
-- 🎯 Overall learning statistics
-- 📊 Individual roadmap progress bars
-- ✅ Completed vs. pending steps breakdown
-- 💪 Motivational messages based on your achievements
+The “Progress Visualization” feature provides:
+- Overall learning statistics.
+- Individual roadmap progress bars.
+- Breakdown of completed versus pending steps.
+- Motivational messages to encourage progress.
 
 ### Import/Export
+- **Export**: Save roadmaps to JSON, PDF, Markdown , or CSV for sharing or backups.
+- **Import**: Load roadmaps from JSON files.
+- Data is stored in a structured `data.json` file.
 
-- **Export**: Share your roadmaps or create backups
-- **Import**: Load roadmaps from other users or restore backups
-- All data is saved in easy-to-read JSON format
-
-## 🎨 Interface Overview
+## Interface Overview
 
 ### Main Menu Sections
 
-| Section | Description | Color Theme |
-|---------|-------------|-------------|
-| 📊 **View & Track** | Progress viewing and analytics | Blue |
-| 🛠️ **Create & Manage** | Content creation and editing | Green |
-| 🗂️ **Organize** | Categories and sorting tools | Yellow |
-| 🔧 **Tools & Utilities** | Import/export and maintenance | Magenta |
+| Section             | Description                           | 
+|---------------------|---------------------------------------|
+| 📊 View & Track     | Progress viewing and analytics        | 
+| 🛠️ Create & Manage  | Roadmap and step creation/editing     | 
+| 🗂️ Organize         | Category management and sorting       | 
+| 🔧 Tools & Utilities| Import/export and data management     | 
 
 ### Progress Indicators
+- 💤 **Not Started** (0%): Ready to begin.
+- 🌱 **Beginning** (<25%): Initial progress.
+- 🚶‍♂️ **Progressing** (<50%): Steady advancement.
+- 🚀 **Good Pace** (<75%): Strong momentum.
+- 🔥 **Almost There** (<100%): Nearing completion.
+- 🎉 **Completed** (100%): Goal achieved.
 
-- 💤 **Not Started** (0%) - Ready to begin!
-- 🌱 **Beginning** (<25%) - Getting started
-- 🚶‍♂️ **Progressing** (<50%) - Making progress  
-- 🚀 **Good Pace** (<75%) - Great momentum!
-- 🔥 **Almost There** (<100%) - Final push!
-- 🎉 **Completed** (100%) - Achievement unlocked!
+## File Structure
 
-## 📁 File Structure
+### Detailed File Descriptions
 
+- **main.py**: 
+  The core application file that initializes the CLI, displays the animated welcome screen (via `ui_components.py`), and manages the main menu. It handles user input to navigate options like creating roadmaps or viewing progress, coordinating with other modules.
+
+- **category_manager.py**: Manages categories (e.g., “Mathematics,” “Programming”) by providing functions to create, view, and delete categories, ensuring organized roadmap storage in `data.json`.
+
+- **progress_tracker.py**: Handles progress visualization, calculating completion percentages and generating colorful progress bars with emojis (e.g., 🚀 for “Good Pace”) using the `rich` library.
+- **roadmap_operations.py**: Implements core roadmap functionality, including creating, editing, and searching roadmaps/steps. The search feature uses string matching to find terms like “calc” efficiently.
+
+- **import_export.py**: Manages data import/export in JSON, PDF, CSV, and Markdown formats, with validation to ensure data integrity during file operations.
+
+- **ui_components.py**: Defines reusable UI elements, such as panels, tables, and animations, using `rich` to create a vibrant, user-friendly terminal interface.
+
+- **data.json**: Stores all roadmap data (categories, titles, steps, priorities) in a structured JSON format, automatically updated by the application.
+
+- **requirements.txt**: Lists dependencies (`rich`, `pandas`, `fpdf`) for easy setup. 
 ```
-learning-roadmap-builder/
+QuestAxis/
 ├── main.py                 # Main application file
-├── data.json              # Your roadmap data (auto-generated)
-├── README.md              # This file
-└── requirements.txt       # Dependencies list
+├── data.json               # Roadmap data (auto-generated)
+├── category_manager.py     # Category management functions
+├── progress_tracker.py     # Progress visualization logic
+├── roadmap_operations.py   # Roadmap creation and search
+├── import_export.py        # Import/export functionality
+├── ui_components.py        # UI elements and animations
+├── README.md               # Documentation file
+├── requirements.txt        # Dependencies list
+├── images/                 # overview and demo assets
+│   ├── img.png
+│   └── demo.gif
 ```
 
-## 🛠️ Technical Details
+## Technical Details
 
 ### Dependencies
-
-- **Rich**: Terminal styling and beautiful interfaces
-- **Matplotlib**: Future charting capabilities
-- **NumPy**: Data processing and analytics
-- **JSON**: Data persistence and import/export
+Check `requirements.txt`
+- **Rich**: Enables colorful terminal interfaces.
+- **Pandas**: Supports CSV export functionality.
+- **FPDF**: Facilitates PDF export generation.
 
 ### Data Storage
-
-All data is stored in `data.json` with the following structure:
+Data is stored in `data.json` with the following structure:
 
 ```json
 {
-  "categories": ["Programming", "Design", "Languages"],
+  "categories": ["Programming", "Mathematics", "Languages"],
   "roadmaps": [
     {
-      "title": "Learn Python",
-      "category": "Programming",
+      "title": "Master Calculus",
+      "category": "Mathematics",
       "steps": [
         {
-          "title": "Basic Syntax",
-          "done": true
+          "title": "Learn Limits",
+          "done": true, 
+          "priority": "high"
         }
       ]
     }
@@ -183,79 +256,46 @@ All data is stored in `data.json` with the following structure:
 }
 ```
 
-## 🎯 Use Cases
 
-### For Students
-- Track course progress and assignments
-- Organize study materials by subject
-- Set and achieve academic milestones
+## Contributing
 
-### For Professionals
-- Plan skill development paths
-- Track certification progress
-- Organize training programs
-
-### For Self-Learners
-- Structure independent learning
-- Track online course completion
-- Visualize knowledge acquisition
-
-## 🤝 Contributing
-
-We welcome contributions! Here's how you can help:
+Contributions are welcome , Here's how you can help:
 
 1. **Fork the repository**
 2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
 3. **Commit changes**: `git commit -m 'Add amazing feature'`
-4. **Push to branch**: `git push origin feature/amazing-feature`
+4. **Push to the branch**: `git push origin feature/amazing-feature`
 5. **Open a Pull Request**
 
-### Areas for Contribution
 
-- 🌐 Web interface development
-- 📱 Mobile companion app
-- 📈 Advanced analytics features
-- 🎨 Additional themes and customization
-- 🔗 Integration with learning platforms
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
-**Q: The interface looks broken or has display issues**
-- Ensure your terminal supports Unicode and colors
-- Try using a modern terminal like Windows Terminal, iTerm2, or GNOME Terminal
+- **Interface display issues**: Ensure your terminal supports Unicode and colors (e.g., Windows Terminal, iTerm2, GNOME Terminal).
+- **Data not saving**: Verify write permissions for the project directory.
+- **Import/Export failures**: Confirm valid JSON file formats and correct file paths.
+- **Data overwritten on update** ? Back up data.json before git pull. It’s excluded in .gitignore to protect your roadmaps.
+## License
 
-**Q: Data not saving between sessions**
-- Check file permissions in the application directory
-- Ensure you have write access to the folder
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+## Acknowledgments
 
-**Q: Import/Export not working**
-- Verify JSON file format is valid
-- Check file paths and permissions
+- **CS50 Team** - For the outstanding Course
+- **Rich Library** - For enabling vibrant terminal interfaces.
+- **Python Community** 
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **Rich Library** - For making terminal applications beautiful
-- **Python Community** - For continuous inspiration and support
-- **All Contributors** - Thank you for making this project better!
-
-## 📞 Support
-
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/yourusername/learning-roadmap-builder/issues)
-- 💡 **Feature Requests**: [GitHub Discussions](https://github.com/yourusername/learning-roadmap-builder/discussions)
-- 📧 **Email**: your.email@example.com
+## Contact
+- **GitHub**: [Unknown22X](https://github.com/Unknown22X)
+- **Bug Reports**: [GitHub Issues](https://github.com/Unknown22X/QuestAxis/issues)
+- **Feature Requests**: [GitHub Discussions](https://github.com/Unknown22X/QuestAxis/discussions)
 
 ---
 
 <div align="center">
-
-**Made with ❤️ for learners everywhere**
-
-⭐ Star this repo if it helped you organize your learning journey!
-
+  Thank You, CS50 team ! <br />
+  Created with dedication for learners worldwide. <br />
+  ⭐ Star this repository if it supports your 
+  learning or you just like it!
 </div>

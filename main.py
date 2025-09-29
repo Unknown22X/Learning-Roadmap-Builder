@@ -25,16 +25,17 @@ def main():
   console = Console()
   data = load_data()
     
-    # Show welcome animation on first run
+  
   try :
     show_welcome_animation()
     
     while True:
         console.clear()
         
+
         # Create main header
         header = Panel.fit(\
-            "[bold bright_cyan]🎯 Learning Roadmap Builder 🎯[/bold bright_cyan]",
+            "[bold bright_cyan]🎯 QuestAxis 🎯[/bold bright_cyan]",
             subtitle="[dim]Your Personal Learning Companion[/dim]",
             border_style="bright_cyan",
             box=box.DOUBLE
@@ -156,7 +157,7 @@ def main():
                     # Stylish exit sequence
                     console.clear()
                     goodbye_panel = Panel.fit(
-                        "[bold bright_green]🎉 Thank you for using Learning Roadmap Builder! 🎉[/bold bright_green]\n"
+                        "[bold bright_green]🎉 Thank you for using QuestAxis! 🎉[/bold bright_green]\n"
                         "[dim]Keep learning and growing! 🚀[/dim]",
                         border_style="bright_green",
                         box=box.DOUBLE
@@ -171,7 +172,7 @@ def main():
                     console.print("[bright_blue]👋 See you next time![/bright_blue]")
                     break
                 case _: 
-                    console.print(f"\n[bold red]❌ Invalid choice![/bold red] Please select a number between [bold]1[/bold] and [bold]13[/bold].")
+                    console.print(f"\n[bold red]❌ Invalid choice![/bold red] Please select a number between [bold]1[/bold] and [bold]14[/bold].")
                     time.sleep(2)
         else:
             console.print(f"\n[bold red]❌ Invalid input![/bold red] Please enter a [bold]number[/bold].")

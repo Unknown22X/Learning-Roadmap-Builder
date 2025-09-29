@@ -1,5 +1,3 @@
-
-
 # Configuration settings for the application
 DEFAULT_CATEGORIES = ["Programming", "Design", "Languages", "Business", "Other"]
 DATA_FILE = "data.json"

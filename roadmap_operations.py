@@ -133,6 +133,8 @@ def add_step(data):
     except:
         priority = "none"
     
+    # add resources feature (for the futre)
+
     # Ensure steps list exists
     if "steps" not in roadmaps[idx]:
         roadmaps[idx]["steps"] = []
@@ -478,6 +480,10 @@ def edit_roadmap(data):
             border_style="bright_green",
             box=box.ROUNDED
         ))
+        
+# a feature for the futre
+def add_resource(data) :
+    pass
 
 def delete_roadmap_or_step(data):
     """Delete roadmap or step"""
