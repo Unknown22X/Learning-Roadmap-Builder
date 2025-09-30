@@ -12,7 +12,7 @@
     <a href="https://github.com/Unknown22X/QuestAxis"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="to edit">View Demo (CS50)</a>
+    <a href="[](https://youtu.be/5z7uMPXgwwU)">View Demo (CS50)</a>
     &middot;
     <a href="https://github.com/Unknown22X/QuestAxis/issues/new?labels=bug&template=bug-report.md">Report Bug</a>
     &middot;
@@ -58,12 +58,13 @@
 
 ##  Overview
 
-Hello I am Jory, a 15yo self-learner, and **QuestAxis** is my final project for Harvard’s CS50 course. **QuestAxis** is a command-line interface (CLI) application designed to create, manage, and visualize learning roadmaps, enabling users to structure goals such as mastering calculus through steps like “Learn Limits” or “Practice Derivatives.” Developed using Python and the rich library, it offers an intuitive interface with progress tracking, search functionality, and export options (e.g., PDF, CSV). Inspired by my need to organize my self-study
+Hello I'm Jory, a 15yo self-learner, and **QuestAxis** is my final project for CS50x .
+**QuestAxis** is a CLI application tool for creating, managing, and visualising learning roadmaps ,allowing users to structure goals such as learning calculus through adding steps like “Learn Limits” or “Practice Derivatives” Developed using Python and rich library, it offers an intuitive interface with progress tracking, search functionality, and export options (Such as PDF and CSV). Inspired by my urge to organize my self-study
 
 it is for anyone who want to learn 🌌! 
 
 
-#### [Youtube Video Demo](to edit)
+#### [Youtube Video Demo](https://youtu.be/5z7uMPXgwwU)
 
 *****
 
@@ -73,46 +74,71 @@ it is for anyone who want to learn 🌌!
 
 ## About the Project
 
-QuestAxis empowers users to organize their learning by creating structured roadmaps, tracking progress, and visualizing achievements. It is designed for anyone who wants to learn efficiently, from students to self-learners.
+QuestAxis empowers users to organize their learning by creating structured roadmaps, tracking progress, and visualizing achievements .
+It is designed for anyone who wants to learn efficiently
 
 
-### Key Features
+### Features
 
 #### Roadmap Management
-- Create unlimited learning roadmaps.
-- Organize roadmaps by categories (e.g., Programming, Mathematics, Languages).
-- Add custom categories for personalized organization.
-- Edit roadmap titles and descriptions.
+
+- Create unlimited number of learning roadmaps, so you can plan in detail.
+
+- Roadmaps can be sorted into categories like Programming, Mathematics or Languages to help with organization.
+
+- Let’s you create custom categories, so you can add a personal touch to learning management.
+
+- Titles and descriptions of each roadmap can be fully edited, so you can update your learning goals and objectives as you progress.
 
 #### Progress Tracking
-- Break down goals into manageable steps.
+
+- Break down goals into smaller steps.
+
 - Mark steps as complete or incomplete.
-- Display visual progress bars with completion percentages.
-- Provide real-time statistics and analytics.
+
+- Display progress bars with percentages.
+
+- Show real time statistics and analytics.
 
 #### Visual Interface
-- Utilize the `rich` library for a colorful, user-friendly terminal interface.
-- Feature animated welcome screens and loading effects.
-- Visualize progress with emojis and color-coded indicators.
-- Offer motivational messages based on progress.
+
+- Use  `rich` library for a colorful terminal interface.
+
+- Animated welcome screens and loading effects.
+
+- Visualize progress with emojis and color coded indicators.
+
+- Motivational messages based on progress.
 
 #### Organization Tools
+
 - Manage categories efficiently.
-- Sort roadmaps by title, progress, or category.
+
+- Sort roadmaps by title, progress or category.
+
 - Filter roadmaps by category.
-- Present comprehensive overview dashboards.
+
+- Show dashboard overview.
 
 #### Data Management
-- Import and export roadmaps in JSON, PDF, CSV, or Markdown formats.
-- Ensure automatic data persistence in `data.json`.
-- Support backups and sharing of learning paths.
-- Implement safe deletion with confirmation prompts.
+
+- Import and export roadmaps in JSON, PDF, CSV or Markdown.
+
+- Auto save data in `data.json`.
+
+- Backups and sharing of learning paths.
+
+- Safe deletion with confirmation prompts.
 
 #### Analytics
+
 - Track overall progress across roadmaps.
-- Provide category-specific progress breakdowns.
-- Display completion statistics and trends.
-- Offer insights and recommendations for learning efficiency..
+
+- Category specific progress breakdowns.
+
+- Completion statistics and trends.
+
+- Insights and recommendations for learning efficiency.
 
 ## Getting Started
 
@@ -141,27 +167,27 @@ QuestAxis empowers users to organize their learning by creating structured roadm
 ### First Steps
 
 1. Launch QuestAxis to view the animated welcome screen.
-2. Select “Create Roadmap” (option 2) from the main menu.
+2. Select "Create Roadmap" (option 2) from the main menu.
 3. Add learning steps (option 3) to break down your goals.
 4. Mark steps as complete (option 4) to track progress.
-5. Visualize progress with graphical displays (option 10).
+5. Visualize progress (option 10) .
    
 ## Detailed Usage Guide
 
 ### Creating Roadmaps
-1. Select “Create Roadmap” from the main menu.
-2. Choose or create a category (e.g., Mathematics).
+1. Select "Create Roadmap" from the main menu.
+2. Choose or create a category (e.g Mathematics).
 3. Enter a roadmap title (e.g., “Master Calculus”).
 4. Add steps to structure your learning path.
 
 ### Managing Categories
-Access the “Manage Categories” section to:
+Access the "Manage Categories" section to:
 - View all categories with associated roadmap counts.
 - Add new categories for organization.
 - Delete unused categories with safety checks.
 
 ### Progress Visualization
-The “Progress Visualization” feature provides:
+The "Progress Visualization" feature provides:
 - Overall learning statistics.
 - Individual roadmap progress bars.
 - Breakdown of completed versus pending steps.
@@ -170,7 +196,7 @@ The “Progress Visualization” feature provides:
 ### Import/Export
 - **Export**: Save roadmaps to JSON, PDF, Markdown , or CSV for sharing or backups.
 - **Import**: Load roadmaps from JSON files.
-- Data is stored in a structured `data.json` file.
+- The data is stored in  `data.json` file.
 
 ## Interface Overview
 
@@ -196,18 +222,19 @@ The “Progress Visualization” feature provides:
 ### Detailed File Descriptions
 
 - **main.py**: 
-  The core application file that initializes the CLI, displays the animated welcome screen (via `ui_components.py`), and manages the main menu. It handles user input to navigate options like creating roadmaps or viewing progress, coordinating with other modules.
+  This file contains the core application logic responsible for initializing the command line interface, showing the animated welcome sequence ('via ui_components.py'), and handling the main menu. It responds to user actions to switch between options like creating roadmaps and checking progress, and interacts with other modules to accomplish this task
 
-- **category_manager.py**: Manages categories (e.g., “Mathematics,” “Programming”) by providing functions to create, view, and delete categories, ensuring organized roadmap storage in `data.json`.
+- **category_manager.py**:  Provides the functions to manipulate categories (e.g. “Mathematics”, “Programming”) for creating, viewing, and deleting, as well as organized storage of roadmaps within data.json .
 
-- **progress_tracker.py**: Handles progress visualization, calculating completion percentages and generating colorful progress bars with emojis (e.g., 🚀 for “Good Pace”) using the `rich` library.
-- **roadmap_operations.py**: Implements core roadmap functionality, including creating, editing, and searching roadmaps/steps. The search feature uses string matching to find terms like “calc” efficiently.
+- **progress_tracker.py**:  Responsible for the completion visualization system, calculating completion rates, and creating progress bars with emojis for each range (e.g. 🚀 “Good Pace”) using the rich library.
 
-- **import_export.py**: Manages data import/export in JSON, PDF, CSV, and Markdown formats, with validation to ensure data integrity during file operations.
+- **roadmap_operations.py**: Contains the implementations for the primary functionalities of a roadmap, such as creating, editing, and searching roadmaps/steps. For the search function, the system performs string matching and can quickly retrieve steps including the term like “calc”.
 
-- **ui_components.py**: Defines reusable UI elements, such as panels, tables, and animations, using `rich` to create a vibrant, user-friendly terminal interface.
+- **import_export.py**: Responsible for the import/export of data in JSON, PDF, CSV, and Markdown formats and ensures data integrity during the file operations.
 
-- **data.json**: Stores all roadmap data (categories, titles, steps, priorities) in a structured JSON format, automatically updated by the application.
+- **ui_components.py**:  Uses rich to provide a colorful and user-friendly terminal interface and defines reusable components for the UI, like panels, tables, and different animated sequences.
+
+- **data.json**: Contains root roadmap data (categories, titles, steps, and priorities) in a structured format, as well as in JSON which is periodically updated by the application.
 
 - **requirements.txt**: Lists dependencies (`rich`, `pandas`, `fpdf`) for easy setup. 
 ```
