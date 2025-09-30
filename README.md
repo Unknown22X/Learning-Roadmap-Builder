@@ -12,7 +12,7 @@
     <a href="https://github.com/Unknown22X/QuestAxis"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="[](https://youtu.be/5z7uMPXgwwU)">View Demo (CS50)</a>
+    <a href="https://youtu.be/5z7uMPXgwwU">View Demo (CS50)</a>
     &middot;
     <a href="https://github.com/Unknown22X/QuestAxis/issues/new?labels=bug&template=bug-report.md">Report Bug</a>
     &middot;
@@ -32,7 +32,7 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
-        <li><a href="#key-features
+        <li><a href="#features
 ">Key Features
 </a></li>
       </ul>
